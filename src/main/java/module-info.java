@@ -11,6 +11,8 @@ module com.example.carpoolingapp {
 //    requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
 
+    exports com.example.carpoolingapp.view;
+
     opens com.example.carpoolingapp to javafx.fxml;
     exports com.example.carpoolingapp;
 }
