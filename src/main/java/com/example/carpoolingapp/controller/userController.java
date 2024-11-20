@@ -4,13 +4,19 @@ import com.example.carpoolingapp.view.userregister;
 import javafx.application.Application;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
+
+import com.example.carpoolingapp.model.DatabaseInitializer;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 public class userController extends Application {
     private User userModel;
     private userregister userView;
     @Override
     public void start(Stage stage) {
         userModel = new User();
-        userView = new userregister(stage, this); // Pass controller to the view
+        userView = new userregister(stage, this);
     }
     public void handleRegistration() {
         try {
@@ -53,6 +59,39 @@ public class userController extends Application {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    public void saveUser(String username, String email, String phone, String firstName, String lastName, String birthDate, String password) {
+        String insertQuery = "INSERT INTO Users (username, email, phoneNumber, firstName, lastName, birthDate, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (Connection connection = DatabaseInitializer.getConnection()) {
+            DatabaseInitializer.selectDatabase(connection); // Select the database
+            try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
+                preparedStatement.setString(1, username);
+                preparedStatement.setString(2, email);
+                preparedStatement.setString(3, phone);
+                preparedStatement.setString(4, firstName);
+                preparedStatement.setString(5, lastName);
+                preparedStatement.setString(6, birthDate);
+                preparedStatement.setString(7, password);
+
+                int rowsAffected = preparedStatement.executeUpdate();
+                if (rowsAffected > 0) {
+                    showAlert(Alert.AlertType.INFORMATION, "Success", "User registered successfully!");
+                } else {
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to register user.");
+                }
+            }
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Database Error", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
     public static void main(String[] args) {
         launch(args);
     }

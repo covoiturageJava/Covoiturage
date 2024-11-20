@@ -62,7 +62,25 @@ public class userregister {
 
         submit = new Button("S'inscrire");
         submit.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14;");
-        submit.setOnAction(event -> controller.handleRegistration());
+        submit.setOnAction(event -> {
+            String username = usernameinput.getText();
+            String email = emailinput.getText();
+            String phone = numtelephoneinput.getText();
+            String firstName = prenominput.getText();
+            String lastName = nominput.getText();
+            String birthDate = dateinput.getText();
+            String password = passwodinput.getText();
+            String confirmPassword = confirminput.getText();
+
+            if (!password.equals(confirmPassword)) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Password Mismatch");
+                alert.setContentText("Passwords do not match!");
+                alert.showAndWait();
+            } else {
+                controller.saveUser(username, email, phone, firstName, lastName, birthDate, password);
+            }
+        });
         gridPane.add(submit, 1, 8);
 
         Scene scene = new Scene(gridPane, 700, 600);
@@ -112,4 +130,5 @@ public class userregister {
     public PasswordField getConfirmInput() {
         return confirminput;
     }
+    
 }
