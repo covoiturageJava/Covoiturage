@@ -13,7 +13,6 @@ public class users {
 
     public users() {
     }
-
     public users(int id, String firstName, String lastName, String username, String email, String password, String phone, String dateOfCreation, String dateOfBirth) {
         this.id = id;
         this.firstName = firstName;
