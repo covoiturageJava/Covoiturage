@@ -1,31 +1,15 @@
 package com.example.carpoolingapp.model;
 
-public class users {
+public class User {
     private int id;
     private String firstName;
     private String lastName;
     private String username;
     private String email;
     private String password;
-    private String phone;
-    private String dateOfCreation;
-    private String dateOfBirth;
-
-    public users() {
-    }
-
-    public users(int id, String firstName, String lastName, String username, String email, String password, String phone, String dateOfCreation, String dateOfBirth) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.phone = phone;
-        this.dateOfCreation = dateOfCreation;
-        this.dateOfBirth = dateOfBirth;
-    }
-
+    private String phoneNumber;
+    private String birthDate;
+    private String creationDate;
 
     public int getId() {
         return id;
@@ -75,27 +59,27 @@ public class users {
         this.password = password;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public String getDateOfCreation() {
-        return dateOfCreation;
+    public String getBirthDate() {
+        return birthDate;
     }
 
-    public void setDateOfCreation(String dateOfCreation) {
-        this.dateOfCreation = dateOfCreation;
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
     }
 
-    public String getDateOfBirth() {
-        return dateOfBirth;
+    public String getCreationDate() {
+        return creationDate;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
     }
 }
