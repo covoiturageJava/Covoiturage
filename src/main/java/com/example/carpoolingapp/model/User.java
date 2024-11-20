@@ -11,6 +11,21 @@ public class User {
     private String birthDate;
     private String creationDate;
 
+    public User() {
+    }
+    public User(int id, String firstName, String lastName, String username, String email, String password, String phone, String dateOfCreation, String dateOfBirth) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phone;
+        this.birthDate = dateOfBirth;
+        this.creationDate = dateOfCreation;
+    }
+
+
     public int getId() {
         return id;
     }

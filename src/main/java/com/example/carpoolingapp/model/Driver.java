@@ -8,6 +8,19 @@ public class Driver extends User {
     private String griseInfo;
     private boolean confirmed;
 
+    public Driver() {
+    }
+
+    public Driver(int id, String firstName, String lastName, String username, String email, String password, String phone, String dateOfCreation, String dateOfBirth, String vehiculeType, String cinInfo, String assuranceInfo, String permitInfo, String griseInfo, boolean confirmed) {
+        super(id, firstName, lastName, username, email, password, phone, dateOfCreation, dateOfBirth);
+        this.vehiculeType = vehiculeType;
+        this.cinInfo = cinInfo;
+        this.assuranceInfo = assuranceInfo;
+        this.permitInfo = permitInfo;
+        this.griseInfo = griseInfo;
+        this.confirmed = confirmed;
+    }
+
     public String getVehiculeType() {
         return vehiculeType;
     }
