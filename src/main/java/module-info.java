@@ -10,6 +10,8 @@ module com.example.carpoolingapp {
     requires org.kordamp.bootstrapfx.core;
 //    requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires java.sql;
+    requires javafx.swing;
 
     exports com.example.carpoolingapp.view;
 

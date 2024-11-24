@@ -1,33 +1,92 @@
 package com.example.carpoolingapp.model;
 
-public class drivers extends users{
-
-    private String idCardInfo;
+public class drivers extends users {
+    private int etat;
+    private String typeVehicule;
+    private String marqueVehicule;
+    private String modeleVehicule;
+    private String anneeVehicule;
+    private String cinInfo;
     private String assuranceInfo;
     private String permitInfo;
-    private String cartGriseInfo;
-    private boolean confirmed;
-    private String typeOfVehicule;
-
-    public drivers() {
-    }
-
-    public drivers(int id, String firstName, String lastName, String username, String email, String password, String phone, String dateOfCreation, String dateOfBirth, String idCardInfo, String assuranceInfo, String permitInfo, String cartGriseInfo, boolean confirmed, String typeOfVehicule) {
-        super(id, firstName, lastName, username, email, password, phone, dateOfCreation, dateOfBirth);
-        this.idCardInfo = idCardInfo;
+    private String griseInfo;
+    private String dateInscription;
+    private String imageExterieurAvant;
+    private String imageExterieurArriere;
+    private String imageInterieurAvant;
+    private String imageInterieurArriere;
+    private String imageMatricule;
+    public drivers(int etat, String typeVehicule, String marqueVehicule, String modeleVehicule,
+                   String anneeVehicule, String cinInfo, String assuranceInfo, String permitInfo,
+                   String griseInfo, String dateInscription, String imageExterieurAvant,
+                   String imageExterieurArriere, String imageInterieurAvant,
+                   String imageInterieurArriere, String imageMatricule) {
+        this.etat = etat;
+        this.typeVehicule = typeVehicule;
+        this.marqueVehicule = marqueVehicule;
+        this.modeleVehicule = modeleVehicule;
+        this.anneeVehicule = anneeVehicule;
+        this.cinInfo = cinInfo;
         this.assuranceInfo = assuranceInfo;
         this.permitInfo = permitInfo;
-        this.cartGriseInfo = cartGriseInfo;
-        this.confirmed = confirmed;
-        this.typeOfVehicule = typeOfVehicule;
+        this.griseInfo = griseInfo;
+        this.dateInscription = dateInscription;
+        this.imageExterieurAvant = imageExterieurAvant;
+        this.imageExterieurArriere = imageExterieurArriere;
+        this.imageInterieurAvant = imageInterieurAvant;
+        this.imageInterieurArriere = imageInterieurArriere;
+        this.imageMatricule = imageMatricule;
     }
 
-    public String getIdCardInfo() {
-        return idCardInfo;
+    public drivers() {
+
+    }
+    public int getEtat() {
+        return etat;
     }
 
-    public void setIdCardInfo(String idCardInfo) {
-        this.idCardInfo = idCardInfo;
+    public void setEtat(int etat) {
+        this.etat = etat;
+    }
+
+    public String getTypeVehicule() {
+        return typeVehicule;
+    }
+
+    public void setTypeVehicule(String typeVehicule) {
+        this.typeVehicule = typeVehicule;
+    }
+
+    public String getMarqueVehicule() {
+        return marqueVehicule;
+    }
+
+    public void setMarqueVehicule(String marqueVehicule) {
+        this.marqueVehicule = marqueVehicule;
+    }
+
+    public String getModeleVehicule() {
+        return modeleVehicule;
+    }
+
+    public void setModeleVehicule(String modeleVehicule) {
+        this.modeleVehicule = modeleVehicule;
+    }
+
+    public String getAnneeVehicule() {
+        return anneeVehicule;
+    }
+
+    public void setAnneeVehicule(String anneeVehicule) {
+        this.anneeVehicule = anneeVehicule;
+    }
+
+    public String getCinInfo() {
+        return cinInfo;
+    }
+
+    public void setCinInfo(String cinInfo) {
+        this.cinInfo = cinInfo;
     }
 
     public String getAssuranceInfo() {
@@ -46,27 +105,59 @@ public class drivers extends users{
         this.permitInfo = permitInfo;
     }
 
-    public String getCartGriseInfo() {
-        return cartGriseInfo;
+    public String getGriseInfo() {
+        return griseInfo;
     }
 
-    public void setCartGriseInfo(String cartGriseInfo) {
-        this.cartGriseInfo = cartGriseInfo;
+    public void setGriseInfo(String griseInfo) {
+        this.griseInfo = griseInfo;
     }
 
-    public boolean isConfirmed() {
-        return confirmed;
+    public String getDateInscription() {
+        return dateInscription;
     }
 
-    public void setConfirmed(boolean confirmed) {
-        this.confirmed = confirmed;
+    public void setDateInscription(String dateInscription) {
+        this.dateInscription = dateInscription;
     }
 
-    public String getTypeOfVehicule() {
-        return typeOfVehicule;
+    public String getImageExterieurAvant() {
+        return imageExterieurAvant;
     }
 
-    public void setTypeOfVehicule(String typeOfVehicule) {
-        this.typeOfVehicule = typeOfVehicule;
+    public void setImageExterieurAvant(String imageExterieurAvant) {
+        this.imageExterieurAvant = imageExterieurAvant;
+    }
+
+    public String getImageExterieurArriere() {
+        return imageExterieurArriere;
+    }
+
+    public void setImageExterieurArriere(String imageExterieurArriere) {
+        this.imageExterieurArriere = imageExterieurArriere;
+    }
+
+    public String getImageInterieurAvant() {
+        return imageInterieurAvant;
+    }
+
+    public void setImageInterieurAvant(String imageInterieurAvant) {
+        this.imageInterieurAvant = imageInterieurAvant;
+    }
+
+    public String getImageInterieurArriere() {
+        return imageInterieurArriere;
+    }
+
+    public void setImageInterieurArriere(String imageInterieurArriere) {
+        this.imageInterieurArriere = imageInterieurArriere;
+    }
+
+    public String getImageMatricule() {
+        return imageMatricule;
+    }
+
+    public void setImageMatricule(String imageMatricule) {
+        this.imageMatricule = imageMatricule;
     }
 }
