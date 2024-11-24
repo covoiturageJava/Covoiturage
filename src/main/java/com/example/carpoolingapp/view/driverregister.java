@@ -1,7 +1,7 @@
 package com.example.carpoolingapp.view;
 
 import com.example.carpoolingapp.controller.driverController;
-import com.example.carpoolingapp.model.drivers;
+import com.example.carpoolingapp.model.Driver;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class driverregister  {
     driverController controller = new driverController();
-    public Scene getDriverRegisterScene(drivers driver) {
+    public Scene getDriverRegisterScene(Driver driver) {
         VBox rootContainer = new VBox();
         rootContainer.setSpacing(10);
         rootContainer.setPadding(new Insets(15));
@@ -81,7 +81,7 @@ public class driverregister  {
         registerButton.setOnMouseExited(e -> registerButton.setStyle("-fx-background-color: #388e3c; -fx-text-fill: white; -fx-font-size: 14; -fx-border-radius: 8px; -fx-padding: 8px 15px;"));
         formGrid.add(registerButton, 1, 9);
         registerButton.setOnAction(e -> {
-            drivers localDriver = driver; // Copier la variable globale
+            Driver localDriver = driver; // Copier la variable globale
             String firstName = firstNameField.getText();
             String lastName = lastNameField.getText();
             String email = emailField.getText();

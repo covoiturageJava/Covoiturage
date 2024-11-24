@@ -1,7 +1,7 @@
 package com.example.carpoolingapp.view;
 
 import com.example.carpoolingapp.controller.driverController;
-import com.example.carpoolingapp.model.drivers;
+import com.example.carpoolingapp.model.Driver;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -34,7 +34,7 @@ import java.util.List;
 public class vehiculePic {
     private final HashMap<String, String> base64Images = new HashMap<>(); // Stockage des images encodées en Base64
     private Stage currentStage;
-    public void show(Stage primaryStage, drivers driver) {
+    public void show(Stage primaryStage, Driver driver) {
         this.currentStage = primaryStage;
         primaryStage.setTitle("Images du Véhicule");
         VBox mainContainer = new VBox(20);
@@ -90,7 +90,7 @@ public class vehiculePic {
     /**
      * Gère la soumission des images.
      */
-    private void handleSubmit(drivers driver) {
+    private void handleSubmit(Driver driver) {
         List<String> errors = new ArrayList<>();
         String imageExterieurAvant = base64Images.get("exterieur voiture avant");
         String imageExterieurArriere = base64Images.get("exterieur voiture arrière");

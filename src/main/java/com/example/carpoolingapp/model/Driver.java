@@ -1,6 +1,6 @@
 package com.example.carpoolingapp.model;
 
-public class drivers extends users {
+public class Driver extends User {
     private int etat;
     private String typeVehicule;
     private String marqueVehicule;
@@ -16,7 +16,7 @@ public class drivers extends users {
     private String imageInterieurAvant;
     private String imageInterieurArriere;
     private String imageMatricule;
-    public drivers(int etat, String typeVehicule, String marqueVehicule, String modeleVehicule,
+    public Driver(int etat, String typeVehicule, String marqueVehicule, String modeleVehicule,
                    String anneeVehicule, String cinInfo, String assuranceInfo, String permitInfo,
                    String griseInfo, String dateInscription, String imageExterieurAvant,
                    String imageExterieurArriere, String imageInterieurAvant,
@@ -38,7 +38,7 @@ public class drivers extends users {
         this.imageMatricule = imageMatricule;
     }
 
-    public drivers() {
+    public Driver() {
 
     }
     public int getEtat() {

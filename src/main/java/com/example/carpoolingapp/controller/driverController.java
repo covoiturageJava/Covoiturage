@@ -1,18 +1,18 @@
 package com.example.carpoolingapp.controller;
 import com.example.carpoolingapp.algo.ImageVerificationService;
-import com.example.carpoolingapp.database;
-import com.example.carpoolingapp.model.drivers;
+import com.example.carpoolingapp.model.DatabaseInitializer;
+import com.example.carpoolingapp.model.Driver;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 public class driverController {
-    private drivers driver;
+    private Driver driver;
     private static ImageVerificationService imageVerifier;
     public driverController() {
-        this.driver = new drivers();
+        this.driver = new Driver();
         this.imageVerifier = new ImageVerificationService();
     }
-    public drivers saveStep1(drivers driver,String firstName, String lastName, String username, String email, String password, String phone, String dateOfBirth, String typeVehicule,String Marque,String modele,String annee) {
+    public Driver saveStep1(Driver driver,String firstName, String lastName, String username, String email, String password, String phone, String dateOfBirth, String typeVehicule,String Marque,String modele,String annee) {
         List<String> errors = validateFields(firstName, lastName, username, email, password, phone, dateOfBirth, typeVehicule,Marque,modele,annee);
         if (errors.isEmpty()) {
             driver.setFirstName(firstName);
@@ -20,8 +20,8 @@ public class driverController {
             driver.setUsername(username);
             driver.setEmail(email);
             driver.setPassword(password);
-            driver.setPhone(phone);
-            driver.setDateOfBirth(dateOfBirth);
+            driver.setPhoneNumber(phone);
+            driver.setBirthDate(dateOfBirth);
             driver.setTypeVehicule(typeVehicule);
             driver.setMarqueVehicule(Marque);
             driver.setAnneeVehicule(annee);
@@ -67,7 +67,7 @@ public class driverController {
         }
         return errors;
     }
-    public drivers saveStep2(drivers driver,String imageExterieurAvant, String imageExterieurArriere, String imageInterieurAvant, String imageInterieurArriere, String imageMatricule) {
+    public Driver saveStep2(Driver driver,String imageExterieurAvant, String imageExterieurArriere, String imageInterieurAvant, String imageInterieurArriere, String imageMatricule) {
         List<String> errors = validateImages(imageExterieurAvant, imageExterieurArriere, imageInterieurAvant, imageInterieurArriere, imageMatricule);
         if (errors.isEmpty()) {
             try {
@@ -103,7 +103,7 @@ public class driverController {
         }
         return errors;
     }
-    public drivers saveStep3(drivers driver,String cinRecto, String cinVerso, String carteGriseRecto, String carteGriseVerso, String permisRecto, String permisVerso, String assurance) {
+    public Driver saveStep3(Driver driver,String cinRecto, String cinVerso, String carteGriseRecto, String carteGriseVerso, String permisRecto, String permisVerso, String assurance) {
         List<String> errors = validateStep3(cinRecto, cinVerso, carteGriseRecto, carteGriseVerso, permisRecto, permisVerso, assurance);
         if (errors.isEmpty()) {
             try {
@@ -145,10 +145,9 @@ public class driverController {
         }
         return errors;
     }
-    public void submitDriverToDatabase(drivers driver) {
+    public void submitDriverToDatabase(Driver driver) {
         try {
-            database db = new database();
-            db.checkDatabase();
+            DatabaseInitializer db = new DatabaseInitializer();
             db.insertDriver(driver);
             System.out.println("Conducteur soumis et ajouté à la base de données.");
         } catch (NullPointerException npe) {

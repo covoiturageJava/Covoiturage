@@ -1,7 +1,7 @@
 module com.example.carpoolingapp {
-    requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
+    requires transitive javafx.controls;
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
@@ -12,7 +12,9 @@ module com.example.carpoolingapp {
     requires com.almasb.fxgl.all;
     requires java.sql;
     requires javafx.swing;
+    requires java.dotenv;
 
+    exports com.example.carpoolingapp.controller;
     exports com.example.carpoolingapp.view;
 
     opens com.example.carpoolingapp to javafx.fxml;

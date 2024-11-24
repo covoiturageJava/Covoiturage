@@ -1,7 +1,7 @@
 package com.example.carpoolingapp.view;
 
 import com.example.carpoolingapp.controller.driverController;
-import com.example.carpoolingapp.model.drivers;
+import com.example.carpoolingapp.model.Driver;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -31,7 +31,7 @@ public class ImageVerification {
 
     private final HashMap<String, String> base64Images = new HashMap<>();
 
-    public void show(Stage stage, drivers driver) {
+    public void show(Stage stage, Driver driver) {
         stage.setTitle("Vérification des Images");
 
         VBox mainContainer = new VBox(20);
@@ -88,7 +88,7 @@ public class ImageVerification {
 
         return docBox;
     }
-    private void handleSubmit(drivers driver) {
+    private void handleSubmit(Driver driver) {
         List<String> errors = new ArrayList<>();
         String cinFront = base64Images.get("Carte d'identité Recto");
         String cinBack = base64Images.get("Carte d'identité Verso");

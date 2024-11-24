@@ -1,6 +1,6 @@
 package com.example.carpoolingapp.view;
 
-import com.example.carpoolingapp.model.drivers;
+import com.example.carpoolingapp.model.Driver;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -11,7 +11,7 @@ import java.util.Base64;
 import java.util.Map;
 public class DriverSummaryView {
 
-    public void show(Stage stage, drivers driver) {
+    public void show(Stage stage, Driver driver) {
         VBox root = new VBox(15);
         root.setStyle("-fx-padding: 20; -fx-alignment: center; -fx-background-color: #f5f5f5;");
 
