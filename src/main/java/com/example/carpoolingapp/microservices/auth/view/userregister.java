@@ -1,5 +1,5 @@
-package com.example.carpoolingapp.view;
-import com.example.carpoolingapp.controller.userController;
+package com.example.carpoolingapp.microservices.auth.view;
+import com.example.carpoolingapp.microservices.auth.controller.userController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

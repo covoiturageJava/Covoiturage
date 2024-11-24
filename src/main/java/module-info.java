@@ -14,8 +14,8 @@ module com.example.carpoolingapp {
     requires javafx.swing;
     requires java.dotenv;
 
-    exports com.example.carpoolingapp.controller;
-    exports com.example.carpoolingapp.view;
+    exports com.example.carpoolingapp.microservices.auth.controller;
+    exports com.example.carpoolingapp.microservices.auth.view;
 
     opens com.example.carpoolingapp to javafx.fxml;
     exports com.example.carpoolingapp;

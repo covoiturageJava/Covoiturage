@@ -1,4 +1,4 @@
-package com.example.carpoolingapp.view;
+package com.example.carpoolingapp.microservices.auth.view;
 import com.example.carpoolingapp.model.DatabaseInitializer;
 import com.example.carpoolingapp.model.Driver;
 import javafx.application.Application;

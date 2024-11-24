@@ -1,17 +1,14 @@
-package com.example.carpoolingapp.view;
+package com.example.carpoolingapp.microservices.auth.view;
 
-import com.example.carpoolingapp.controller.driverController;
+import com.example.carpoolingapp.microservices.auth.controller.driverController;
 import com.example.carpoolingapp.model.Driver;
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
-import java.security.cert.PolicyNode;
+
 import java.util.List;
 
 public class driverregister  {

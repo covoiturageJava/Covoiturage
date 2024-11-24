@@ -1,8 +1,6 @@
-package com.example.carpoolingapp.view;
+package com.example.carpoolingapp.microservices.auth.view;
 
-import com.example.carpoolingapp.Main;
-import com.example.carpoolingapp.controller.LoginController;
-import javafx.application.Application;
+import com.example.carpoolingapp.microservices.auth.controller.LoginController;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;

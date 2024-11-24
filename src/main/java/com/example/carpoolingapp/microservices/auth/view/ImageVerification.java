@@ -1,6 +1,6 @@
-package com.example.carpoolingapp.view;
+package com.example.carpoolingapp.microservices.auth.view;
 
-import com.example.carpoolingapp.controller.driverController;
+import com.example.carpoolingapp.microservices.auth.controller.driverController;
 import com.example.carpoolingapp.model.Driver;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,59 +17,61 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javax.imageio.IIOImage;
+
 import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.List;
 
-public class vehiculePic {
-    private final HashMap<String, String> base64Images = new HashMap<>(); // Stockage des images encodées en Base64
-    private Stage currentStage;
-    public void show(Stage primaryStage, Driver driver) {
-        this.currentStage = primaryStage;
-        primaryStage.setTitle("Images du Véhicule");
+public class ImageVerification {
+
+    private final HashMap<String, String> base64Images = new HashMap<>();
+
+    public void show(Stage stage, Driver driver) {
+        stage.setTitle("Vérification des Images");
+
         VBox mainContainer = new VBox(20);
         mainContainer.setAlignment(Pos.CENTER);
         mainContainer.setPadding(new Insets(20));
         mainContainer.setStyle("-fx-background-color: #f0f4f8;");
+
         Label title = new Label("Veuillez fournir les images nécessaires");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 22));
         title.setTextFill(Color.web("#00796b"));
         HBox mainLayout = new HBox(30);
         mainLayout.setAlignment(Pos.CENTER);
         mainLayout.setSpacing(30);
-        String[] documents = {"exterieur voiture", "interieur voiture", "Matricule"};
-        for (String doc : documents) {
-            VBox docBox = createDocumentBox(doc, primaryStage);
+        Map<String, Boolean> documents = Map.of(
+                "Carte d'identité", true,
+                "Carte Grise", true,
+                "Permis de conduire", true,
+                "Assurance", false
+        );
+
+        for (Map.Entry<String, Boolean> entry : documents.entrySet()) {
+            VBox docBox = createDocumentBox(entry.getKey(), entry.getValue(), stage);
             mainLayout.getChildren().add(docBox);
         }
 
         Button submitButton = new Button("Soumettre");
         submitButton.setStyle("-fx-background-color: #00796b; -fx-text-fill: white; -fx-font-size: 16; -fx-border-radius: 10px; -fx-padding: 10px 20px;");
         submitButton.setOnAction(e -> handleSubmit(driver));
+
         mainContainer.getChildren().addAll(title, mainLayout, submitButton);
+
         Scene scene = new Scene(mainContainer, 900, 600);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        stage.setScene(scene);
+        stage.show();
     }
 
-    /**
-     * Crée un conteneur pour un document spécifique.
-     */
-    private VBox createDocumentBox(String doc, Stage primaryStage) {
+    private VBox createDocumentBox(String doc, boolean isDualImage, Stage stage) {
         VBox docBox = new VBox(15);
         docBox.setAlignment(Pos.CENTER);
-        docBox.setStyle("-fx-background-color: white; -fx-border-color: #00796b; -fx-border-width: 1px; " +
-                "-fx-border-radius: 10px; -fx-padding: 15px;");
+        docBox.setStyle("-fx-background-color: white; -fx-border-color: #00796b; -fx-border-width: 1px; -fx-border-radius: 10px; -fx-padding: 15px;");
 
         Label docLabel = new Label(doc);
         docLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
@@ -77,59 +79,59 @@ public class vehiculePic {
 
         docBox.getChildren().add(docLabel);
 
-        // Ajouter des sélections selon le type de document
-        if (doc.equals("Matricule")) {
-            addImageSelection(docBox, "Matricule", primaryStage);
+        if (isDualImage) {
+            addImageSelection(docBox, doc + " Recto", stage);
+            addImageSelection(docBox, doc + " Verso", stage);
         } else {
-            addImageSelection(docBox, doc + " avant", primaryStage);
-            addImageSelection(docBox, doc + " arrière", primaryStage);
+            addImageSelection(docBox, doc, stage);
         }
+
         return docBox;
     }
-
-    /**
-     * Gère la soumission des images.
-     */
     private void handleSubmit(Driver driver) {
         List<String> errors = new ArrayList<>();
-        String imageExterieurAvant = base64Images.get("exterieur voiture avant");
-        String imageExterieurArriere = base64Images.get("exterieur voiture arrière");
-        String imageInterieurAvant = base64Images.get("interieur voiture avant");
-        String imageInterieurArriere = base64Images.get("interieur voiture arrière");
-        String imageMatricule = base64Images.get("Matricule");
-        if (imageExterieurAvant == null) errors.add("Image extérieure avant manquante");
-        if (imageExterieurArriere == null) errors.add("Image extérieure arrière manquante");
-        if (imageInterieurAvant == null) errors.add("Image intérieure avant manquante");
-        if (imageInterieurArriere == null) errors.add("Image intérieure arrière manquante");
-        if (imageMatricule == null) errors.add("Image de la matricule manquante");
+        String cinFront = base64Images.get("Carte d'identité Recto");
+        String cinBack = base64Images.get("Carte d'identité Verso");
+        String griseFront = base64Images.get("Carte Grise Recto");
+        String griseBack = base64Images.get("Carte Grise Verso");
+        String permitFront = base64Images.get("Permis de conduire Recto");
+        String permitBack = base64Images.get("Permis de conduire Verso");
+        String assurance = base64Images.get("Assurance");
+        if (cinFront == null || cinBack == null) errors.add("Images de la Carte d'identité manquantes");
+        if (griseFront == null || griseBack == null) errors.add("Images de la Carte Grise manquantes");
+        if (permitFront == null || permitBack == null) errors.add("Images du Permis de conduire manquantes");
+        if (assurance == null) errors.add("Image de l'Assurance manquante");
         if (!errors.isEmpty()) {
             showAlert("Erreur de validation", String.join("\n", errors), Alert.AlertType.ERROR);
         } else {
+            driver.setCinInfo(cinFront + ";" + cinBack);
+            driver.setGriseInfo(griseFront + ";" + griseBack);
+            driver.setPermitInfo(permitFront + ";" + permitBack);
+            driver.setAssuranceInfo(assurance);
             driverController controller = new driverController();
-            driver = controller.saveStep2(driver, imageExterieurAvant, imageExterieurArriere, imageInterieurAvant, imageInterieurArriere, imageMatricule);
-            ImageVerification vehiculePicView = new ImageVerification();
-            Stage nextStage = new Stage();
-            vehiculePicView.show(nextStage, driver);
+            controller.saveStep3(driver,cinFront,cinBack,griseFront,griseBack,permitFront,permitBack,assurance);
+            System.out.println("Images enregistrées avec succès !");
         }
     }
-    /**
-     * Ajoute la possibilité de choisir une image.
-     */
-    private void addImageSelection(VBox docBox, String label, Stage primaryStage) {
+
+    private void addImageSelection(VBox docBox, String label, Stage stage) {
         Label sideLabel = new Label(label);
         sideLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
         sideLabel.setTextFill(Color.web("#444444"));
+
         ImageView imageView = new ImageView();
         imageView.setFitWidth(100);
         imageView.setFitHeight(100);
         imageView.setPreserveRatio(true);
         imageView.setStyle("-fx-border-color: #00796b; -fx-border-radius: 10px;");
+
         Button chooseButton = new Button("Choisir une image");
         chooseButton.setStyle("-fx-background-color: #00796b; -fx-text-fill: white; -fx-font-size: 14; -fx-border-radius: 5px;");
+
         chooseButton.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers d'image", "*.png", "*.jpg", "*.jpeg"));
-            File file = fileChooser.showOpenDialog(primaryStage);
+            File file = fileChooser.showOpenDialog(stage);
             if (file != null) {
                 imageView.setImage(new Image(file.toURI().toString()));
                 try {
@@ -141,32 +143,26 @@ public class vehiculePic {
                 }
             }
         });
+
         docBox.getChildren().addAll(sideLabel, imageView, chooseButton);
     }
-    private String encodeImageToBase64(File file) throws Exception {
-        try {
-            // Lire l'image à partir du fichier
-            BufferedImage originalImage = ImageIO.read(file);
 
-            // Redimensionner l'image avant de l'encoder
-            BufferedImage resizedImage = resizeImage(originalImage, 800, 800);  // Redimensionner à une taille maximale (par exemple 800x800)
+    private String encodeImageToBase64(File file) throws IOException {
+        BufferedImage originalImage = ImageIO.read(file);
+        BufferedImage resizedImage = resizeImage(originalImage, 800, 800);
 
-            // Compresser l'image en format JPEG avec une qualité réduite (par exemple, 80%)
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            ImageIO.write(resizedImage, "jpg", byteArrayOutputStream);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ImageIO.write(resizedImage, "jpg", byteArrayOutputStream);
 
-            // Convertir l'image compressée en Base64
-            byte[] imageBytes = byteArrayOutputStream.toByteArray();
-            return Base64.getEncoder().encodeToString(imageBytes);
-        } catch (IOException ex) {
-            showAlert("Erreur", "Erreur lors de l'encodage de l'image : " + ex.getMessage(), Alert.AlertType.ERROR);
-            throw new Exception("Erreur lors de l'encodage de l'image", ex);
-        }
+        byte[] imageBytes = byteArrayOutputStream.toByteArray();
+        return Base64.getEncoder().encodeToString(imageBytes);
     }
+
     private BufferedImage resizeImage(BufferedImage originalImage, int maxWidth, int maxHeight) {
         int width = originalImage.getWidth();
         int height = originalImage.getHeight();
         double aspectRatio = (double) width / (double) height;
+
         if (width > height) {
             width = maxWidth;
             height = (int) (width / aspectRatio);
@@ -174,6 +170,7 @@ public class vehiculePic {
             height = maxHeight;
             width = (int) (height * aspectRatio);
         }
+
         BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = resizedImage.createGraphics();
         g.drawImage(originalImage, 0, 0, width, height, null);
@@ -189,6 +186,4 @@ public class vehiculePic {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-
 }

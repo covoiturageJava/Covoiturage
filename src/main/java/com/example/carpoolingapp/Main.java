@@ -1,8 +1,8 @@
 package com.example.carpoolingapp;
 
-import com.example.carpoolingapp.controller.LoginController;
+import com.example.carpoolingapp.microservices.auth.controller.LoginController;
 import com.example.carpoolingapp.model.DatabaseInitializer;
-import com.example.carpoolingapp.view.Login;
+import com.example.carpoolingapp.microservices.auth.view.Login;
 
 import javafx.application.Application;
 import javafx.stage.Stage;

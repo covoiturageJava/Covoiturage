@@ -1,4 +1,4 @@
-package com.example.carpoolingapp.controller;
+package com.example.carpoolingapp.microservices.auth.controller;
 import com.example.carpoolingapp.algo.ImageVerificationService;
 import com.example.carpoolingapp.model.DatabaseInitializer;
 import com.example.carpoolingapp.model.Driver;

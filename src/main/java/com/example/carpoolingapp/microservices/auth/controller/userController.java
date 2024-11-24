@@ -1,6 +1,6 @@
-package com.example.carpoolingapp.controller;
+package com.example.carpoolingapp.microservices.auth.controller;
 import com.example.carpoolingapp.model.User;
-import com.example.carpoolingapp.view.userregister;
+import com.example.carpoolingapp.microservices.auth.view.userregister;
 import javafx.application.Application;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
