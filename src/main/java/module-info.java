@@ -16,6 +16,8 @@ module com.example.carpoolingapp {
 
     exports com.example.carpoolingapp.microservices.auth.controller;
     exports com.example.carpoolingapp.microservices.auth.view;
+    exports com.example.carpoolingapp.microservices.Drivers.view;
+
 
     opens com.example.carpoolingapp to javafx.fxml;
     exports com.example.carpoolingapp;
