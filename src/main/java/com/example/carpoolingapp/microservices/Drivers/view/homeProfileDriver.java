@@ -34,15 +34,10 @@ public class homeProfileDriver extends Application {
         ImageView profIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/prof.png", 65, 55, 17, 251);
         arrowIcon.setNodeOrientation(javafx.geometry.NodeOrientation.RIGHT_TO_LEFT);
 
-        arrowIcon.setOnMouseClicked(event ->{
-            try{
-                HomeSimpleDriver homeSimpleDriver = new HomeSimpleDriver();
-                Stage curentStage = (Stage)((ImageView) event.getSource()).getScene().getWindow();
-               homeSimpleDriver.start(curentStage);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        });
+        ImageView profileIcon2 = createImageView("file:src/main/resources/com/example/carpoolingapp/images/profile.png", 42, 42, 1, 92);
+        ImageView arrowIcon2 = createImageView("file:src/main/resources/com/example/carpoolingapp/images/Arrow.png", 24, 33, -12, 37);
+        ImageView homeIcon2 = createImageView("file:src/main/resources/com/example/carpoolingapp/images/home.png", 44, 29, 0, 179);
+        ImageView profIcon2 = createImageView("file:src/main/resources/com/example/carpoolingapp/images/prof.png", 44, 33, 0, 221);
 
         Text userName = new Text("User Name");
         userName.setFont(Font.font("Arial Bold", 13));
@@ -57,6 +52,7 @@ public class homeProfileDriver extends Application {
         userNameTag.setFill(javafx.scene.paint.Color.WHITE);
         userNameTag.setLayoutX(23);
         userNameTag.setLayoutY(163);
+
 
         // Add components to sidebar
         sidebar.getChildren().addAll(profiledriver, arrowIcon, homeIcon, profIcon, userName, logoutImage, userNameTag);
@@ -83,6 +79,69 @@ public class homeProfileDriver extends Application {
         headerText.setFill(javafx.scene.paint.Color.WHITE);
         headerText.setLayoutX(22);
         headerText.setLayoutY(265);
+
+        arrowIcon.setOnMouseClicked(event -> {
+            if (sidebar.getPrefWidth() > 50) {
+                // Reduce the sidebar
+                root.setPrefWidth(624);
+                sidebar.setPrefWidth(38);
+                sidebar.setLayoutX(581);
+                sidebar.getChildren().clear();
+                sidebar.getChildren().addAll(arrowIcon2, profIcon2, homeIcon2, profileIcon2);
+
+                // Resize other elements
+                webView.setLayoutX(20);
+                webView.setLayoutY(14);
+                webView.setPrefSize(553, 226); // Adjust the size of WebView
+                offerCard1.setLayoutX(48);
+                offerCard2.setLayoutX(48);
+
+                // Handle arrowIcon2 click to expand the sidebar again
+                arrowIcon2.setOnMouseClicked(event2 -> {
+                    // Expand the sidebar
+                    sidebar.setLayoutX(541);
+                    sidebar.setPrefWidth(92);
+                    sidebar.getChildren().clear();
+                    sidebar.getChildren().addAll(profiledriver, arrowIcon, homeIcon, profIcon, userName, logoutImage, userNameTag);
+                    root.setPrefWidth(624); // Restore the full width of the root
+
+                    // Resize other elements
+                    webView.setLayoutX(20);
+                    webView.setPrefSize(495, 226); // Reset size of WebView
+                    offerCard1.setLayoutX(48);
+                    offerCard2.setLayoutX(48);
+                });
+            } else {
+                // Expand the sidebar
+                sidebar.setLayoutX(541);
+                sidebar.setPrefWidth(92);
+                sidebar.getChildren().clear();
+                sidebar.getChildren().addAll(profiledriver, arrowIcon, homeIcon, profIcon, userName, logoutImage, userNameTag);
+                root.setPrefWidth(624);
+
+                // Resize other elements
+                webView.setLayoutX(20);
+                webView.setPrefSize(455, 226); // Default size of WebView
+                offerCard1.setLayoutX(48);
+                offerCard2.setLayoutX(48);
+
+                // Handle arrowIcon2 click to collapse the sidebar
+                arrowIcon2.setOnMouseClicked(event2 -> {
+                    // Collapse the sidebar
+                    sidebar.setLayoutX(581);
+                    sidebar.setPrefWidth(38);
+                    sidebar.getChildren().clear();
+                    sidebar.getChildren().addAll(arrowIcon2, profIcon2, homeIcon2, profileIcon2);
+
+                    // Resize other elements
+                    webView.setLayoutX(20);
+                    webView.setLayoutY(14);
+                    webView.setPrefSize(554, 216); // Adjust the size of WebView
+                    offerCard1.setLayoutX(48);
+                    offerCard2.setLayoutX(48);
+                });
+            }
+        });
 
         // Add all components to root
         root.getChildren().addAll(sidebar, offerCard1, offerCard2, webView, headerText);
