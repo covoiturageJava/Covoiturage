@@ -60,6 +60,16 @@ public class userController extends Application {
         alert.showAndWait();
     }
     public void saveUser(String username, String email, String phone, String firstName, String lastName, String birthDate, String password) {
+        if (username == null || username.trim().isEmpty() ||
+            email == null || email.trim().isEmpty() ||
+            phone == null || phone.trim().isEmpty() ||
+            firstName == null || firstName.trim().isEmpty() ||
+            lastName == null || lastName.trim().isEmpty() ||
+            birthDate == null || birthDate.trim().isEmpty() ||
+            password == null || password.trim().isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Error", "All fields must be filled!");
+            return;
+        }
         String insertQuery = "INSERT INTO Users (username, email, phoneNumber, firstName, lastName, birthDate, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DatabaseInitializer.getConnection()) {
             DatabaseInitializer.selectDatabase(connection); // Select the database
@@ -84,14 +94,12 @@ public class userController extends Application {
             e.printStackTrace();
         }
     }
-
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setContentText(message);
         alert.showAndWait();
     }
-
     public static void main(String[] args) {
         launch(args);
     }
