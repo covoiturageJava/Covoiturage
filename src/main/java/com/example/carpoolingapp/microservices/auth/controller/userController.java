@@ -4,19 +4,19 @@ import com.example.carpoolingapp.microservices.auth.view.userregister;
 import javafx.application.Application;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
-
 import com.example.carpoolingapp.model.DatabaseInitializer;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 public class userController extends Application {
     private User userModel;
     private userregister userView;
+    private LoginController loginController;
     @Override
     public void start(Stage stage) {
         userModel = new User();
-        userView = new userregister(stage, this);
+        loginController = new LoginController();
+        userView = new userregister(stage, this, loginController);
     }
     public void handleRegistration() {
         try {

@@ -1,5 +1,6 @@
 package com.example.carpoolingapp.microservices.auth.view;
 
+import com.example.carpoolingapp.microservices.auth.controller.LoginController;
 import com.example.carpoolingapp.microservices.auth.controller.driverController;
 import com.example.carpoolingapp.model.Driver;
 import javafx.geometry.Insets;
@@ -30,6 +31,7 @@ import java.util.List;
 public class ImageVerification {
 
     private final HashMap<String, String> base64Images = new HashMap<>();
+    private Button submitButton;
 
     public void show(Stage stage, Driver driver) {
         stage.setTitle("Vérification des Images");
@@ -57,7 +59,7 @@ public class ImageVerification {
             mainLayout.getChildren().add(docBox);
         }
 
-        Button submitButton = new Button("Soumettre");
+        submitButton = new Button("Soumettre");
         submitButton.setStyle("-fx-background-color: #00796b; -fx-text-fill: white; -fx-font-size: 16; -fx-border-radius: 10px; -fx-padding: 10px 20px;");
         submitButton.setOnAction(e -> handleSubmit(driver));
 
@@ -111,6 +113,14 @@ public class ImageVerification {
             driverController controller = new driverController();
             controller.saveStep3(driver,cinFront,cinBack,griseFront,griseBack,permitFront,permitBack,assurance);
             System.out.println("Images enregistrées avec succès !");
+
+            LoginController loginController = new LoginController();
+            Login loginView = new Login(loginController);
+            Stage loginStage = new Stage();
+            loginView.show(loginStage);
+
+            Stage currentStage = (Stage) submitButton.getScene().getWindow();
+            currentStage.close();
         }
     }
 

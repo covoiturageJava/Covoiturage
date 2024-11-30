@@ -1,4 +1,5 @@
 package com.example.carpoolingapp.microservices.auth.view;
+import com.example.carpoolingapp.microservices.auth.controller.LoginController;
 import com.example.carpoolingapp.microservices.auth.controller.userController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,8 +18,10 @@ public class userregister {
     private PasswordField confirminput;
     private Button submit;
     private userController controller;
-    public userregister(Stage stage, userController controller) {
+    private LoginController loginController;
+    public userregister(Stage stage, userController controller, LoginController loginController) {
         this.controller = controller;
+        this.loginController = loginController;
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(20));
         gridPane.setVgap(15);
@@ -79,6 +82,12 @@ public class userregister {
                 alert.showAndWait();
             } else {
                 controller.saveUser(username, email, phone, firstName, lastName, birthDate, password);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Registration Successful");
+                alert.setContentText("Your account has been created successfully!");
+                alert.showAndWait();
+                Login loginView = new Login(loginController);
+                loginView.show(stage);
             }
         });
         gridPane.add(submit, 1, 8);

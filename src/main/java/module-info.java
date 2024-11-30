@@ -13,9 +13,13 @@ module com.example.carpoolingapp {
     requires java.sql;
     requires javafx.swing;
     requires java.dotenv;
+    requires com.google.gson;
+    requires jdk.httpserver;
+    requires java.net.http;
 
     exports com.example.carpoolingapp.microservices.auth.controller;
     exports com.example.carpoolingapp.microservices.auth.view;
+    exports com.example.carpoolingapp.microservices.User.view to javafx.graphics;
 
     opens com.example.carpoolingapp to javafx.fxml;
     exports com.example.carpoolingapp;
