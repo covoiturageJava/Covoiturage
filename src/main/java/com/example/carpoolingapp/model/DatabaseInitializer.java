@@ -1,4 +1,4 @@
-package com.example.carpoolingapp.model;
+        package com.example.carpoolingapp.model;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
@@ -18,82 +18,7 @@ public class DatabaseInitializer {
             statement.execute("USE " + dotenv.get("DB_NAME"));
         }
     }
-    public static void initializeDatabase() {
-        try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery("SHOW DATABASES LIKE '" + dotenv.get("DB_NAME") + "'");
-            if (!resultSet.next()) {
-                statement.executeUpdate("CREATE DATABASE " + dotenv.get("DB_NAME"));
-                System.out.println("Database created");
-            } else {
-                System.out.println("Database already exists");
-            }
-            try (Connection dbConnection = DriverManager.getConnection(
-                    dotenv.get("DB_URL") + "/" + dotenv.get("DB_NAME"), dotenv.get("DB_USER"), dotenv.get("DB_PASSWORD"))) {
-                createTables(dbConnection);
-            }
 
-        } catch (SQLException e) {
-            System.err.println("Error initializing the database: " + e.getMessage());
-        }
-    }
-
-    private static void createTables(Connection connection) {
-        try (Statement statement = connection.createStatement()) {
-            String createUsersTable = "CREATE TABLE IF NOT EXISTS Users ("
-                    + "id INT AUTO_INCREMENT PRIMARY KEY, "
-                    + "firstName VARCHAR(50), "
-                    + "lastName VARCHAR(50), "
-                    + "username VARCHAR(50) UNIQUE, "
-                    + "email VARCHAR(100) UNIQUE, "
-                    + "password VARCHAR(255), "
-                    + "phoneNumber VARCHAR(50), "
-                    + "birthDate VARCHAR(50), "
-                    + "creationDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
-                    + ")";
-            statement.executeUpdate(createUsersTable);
-            System.out.println("Table Users created.");
-
-            String createDriverTable = "CREATE TABLE IF NOT EXISTS Drivers ("
-                    + "id INT AUTO_INCREMENT PRIMARY KEY, "
-                    + "firstName VARCHAR(50), "
-                    + "lastName VARCHAR(50), "
-                    + "username VARCHAR(50) UNIQUE, "
-                    + "email VARCHAR(100) UNIQUE, "
-                    + "password VARCHAR(255), "
-                    + "phoneNumber VARCHAR(50), "
-                    + "birthDate VARCHAR(50), "
-                    + "state INT(10), "
-                    + "vehiculeType VARCHAR(255), "
-                    + "marque_vehicule VARCHAR(100), "
-                    + "modele_vehicule VARCHAR(100), "
-                    + "annee_vehicule VARCHAR(4), "
-                    + "cin_info LONGBLOB, "
-                    + "assurance_info LONGBLOB, "
-                    + "permit_info LONGBLOB, "
-                    + "grise_info LONGBLOB, "
-                    + "image_exterieur_avant LONGBLOB , "
-                    + "image_exterieur_arriere LONGBLOB, "
-                    + "image_interieur_avant LONGBLOB, "
-                    + "image_interieur_arriere LONGBLOB, "
-                    + "image_matricule LONGBLOB, "
-                    + "creationDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
-                    + ")";
-            statement.executeUpdate(createDriverTable);
-            System.out.println("Table Drivers created.");
-
-            String createAdminTable = "CREATE TABLE IF NOT EXISTS Admin ("
-                    + "id INT AUTO_INCREMENT PRIMARY KEY, "
-                    + "username VARCHAR(50) UNIQUE, "
-                    + "email VARCHAR(100) UNIQUE, "
-                    + "password VARCHAR(255)"
-                    + ")";
-            statement.executeUpdate(createAdminTable);
-            System.out.println("Table Admin created.");
-        } catch (SQLException e) {
-            System.err.println("Error creating tables: " + e.getMessage());
-        }
-    }
     public void insertDriver(Driver driver) {
         String insertQuery = "INSERT INTO Drivers ("
                 + "firstName, lastName, username, email, password, phoneNumber, birthDate, state, "

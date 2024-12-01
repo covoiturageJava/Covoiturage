@@ -19,54 +19,41 @@ public class PickUpDriver extends Application {
         // Root AnchorPane
         AnchorPane root = new AnchorPane();
         root.setStyle("-fx-background-color: #1D203E;");
-        root.setPrefSize(624, 453);
-
-        // WebView
-        WebView webView = new WebView();
-        webView.setLayoutX(25);
-        webView.setLayoutY(14);
-        webView.setPrefSize(537, 403);
-        webView.getEngine().load("file:src/main/resources/com/example/carpoolingapp/webview-content.html");
+        root.setPrefSize(664, 540);
 
         // Sidebar
         AnchorPane sidebar = new AnchorPane();
-        sidebar.setLayoutX(581);
-        sidebar.setPrefSize(38, 453);
+        sidebar.setLayoutX(657);
+
+
+        sidebar.setPrefSize(43, 590);
         sidebar.setStyle("-fx-background-color: #2C2F48;");
 
-        // Sidebar Icons
-        ImageView profileIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/profile.png", 42, 42, 1, 92);
-        ImageView arrowIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/Arrow.png", 24, 33, -12, 37);
-        ImageView homeIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/home.png", 44, 29, 0, 179);
-        ImageView profIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/prof.png", 44, 33, 0, 221);
-        sidebar.getChildren().addAll(profileIcon, arrowIcon, homeIcon, profIcon);
+        ImageView profileIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/profile.png", 43, 43, 4, 92);
+        ImageView homeIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/home.png", 45, 25, 0, 180);
+        ImageView profIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/prof.png", 45, 30, 0, 220);
+        ImageView logoutImage = createImageView("file:src/main/resources/com/example/carpoolingapp/images/LoOutButton.png", 55, 299, -3, 305);
+        sidebar.setMinWidth(40);
+        sidebar.setPrefWidth(45);
+        sidebar.setMaxWidth(45);
+
+        sidebar.getChildren().addAll(profileIcon,  homeIcon, profIcon,logoutImage);
 
         // Offer Card 1
         AnchorPane offerCard1 = createOfferCard("User Name", 15.5, 20.0, " data of user\n2024-11-27", "file:src/main/resources/com/example/carpoolingapp/images/profile.png");
 
-        // Offer Card 2
 
-        // Arrow Icon Action
-        arrowIcon.setOnMouseClicked(event -> {
-            try {
-                homeProfileDriver homeProfileDriver = new homeProfileDriver();
-                Stage currentStage = (Stage) ((ImageView) event.getSource()).getScene().getWindow();
-                homeProfileDriver.start(currentStage);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
 
-        // Title Text
-        Text title = new Text("Offres");
-        title.setLayoutX(22);
-        title.setLayoutY(265);
-        title.setFill(Color.WHITE);
-        title.setStyle("-fx-font-weight: bold;");
-        title.setFont(Font.font("Aldhabi", 32));
+
+        WebView webView = new WebView();
+        webView.setLayoutX(25);
+        webView.setLayoutY(14);
+        webView.setPrefSize(620, 523);
+        webView.getEngine().load("file:src/main/resources/com/example/carpoolingapp/webview-content.html");
+
 
         // Add elements to root
-        root.getChildren().addAll(sidebar, title, webView, offerCard1);
+        root.getChildren().addAll(sidebar , webView, offerCard1);
 
         // Create and set scene
         Scene scene = new Scene(root);
@@ -89,8 +76,8 @@ public class PickUpDriver extends Application {
     // Helper method to create an Offer Card
     private AnchorPane createOfferCard(String userName, double distance, double price, String date, String profileImagePath) {
         AnchorPane card = new AnchorPane();
-        card.setLayoutX(264);
-        card.setLayoutY(323);
+        card.setLayoutX(360);
+        card.setLayoutY(460);
         card.setPrefSize(294, 115); // Increase height for new elements
         card.setStyle("-fx-background-color: #2C2F48; -fx-background-radius: 20; -fx-border-color: #01B7C5; -fx-border-radius: 20;");
 
@@ -134,6 +121,23 @@ public class PickUpDriver extends Application {
         pickUpButton.setLayoutY(75);
         pickUpButton.setStyle("-fx-background-color: #01B7C5; -fx-text-fill: white; -fx-font-weight: bold;");
 
+        // Add event handler to the button
+        pickUpButton.setOnAction(event -> {
+            if ("Pick up".equals(pickUpButton.getText())) {
+                // Change color and text of the button
+                pickUpButton.setText("Fin");
+                pickUpButton.setStyle("-fx-background-color: #FF0000; -fx-text-fill: white; -fx-font-weight: bold;");
+            } else if ("Fin".equals(pickUpButton.getText())) {
+                // Redirect to HomeSimpleDriver page
+                try {
+                    HomeSimpleDriver homePage = new HomeSimpleDriver();
+                    Stage currentStage = (Stage) pickUpButton.getScene().getWindow();
+                    homePage.start(currentStage);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         // Add elements to the card
         card.getChildren().addAll(profileIcon, userNameText, distanceText,dateText, priceText, pickUpButton);
 

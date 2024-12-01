@@ -18,55 +18,49 @@ public class HomeSimpleDriver extends Application {
         // Root AnchorPane
         AnchorPane root = new AnchorPane();
         root.setStyle("-fx-background-color: #1D203E;");
-        root.setPrefSize(624, 453);
+        root.setPrefSize(664, 540);
 
         // Sidebar
         AnchorPane sidebar = new AnchorPane();
-        sidebar.setLayoutX(581);
-        sidebar.setPrefSize(38, 453);
+        sidebar.setLayoutX(657);
+        sidebar.setPrefWidth(43);
+        sidebar.setMaxWidth(42);
+
+        sidebar.setPrefSize(43, 568);
         sidebar.setStyle("-fx-background-color: #2C2F48;");
 
-        // Sidebar Icons (Modifiez les chemins relatifs en fonction de l'emplacement réel des images)
-       ImageView profileIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/profile.png", 42, 42, 1, 92);
-        ImageView arrowIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/Arrow.png", 24, 33, -12, 37);
-        ImageView homeIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/home.png", 44, 29, 0, 179);
-        ImageView profIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/prof.png", 44, 33, 0, 221);
-
-        sidebar.getChildren().addAll(profileIcon, arrowIcon, homeIcon, profIcon);
+        ImageView profileIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/profile.png", 43, 43, 4, 92);
+        ImageView homeIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/home.png", 45, 25, 0, 180);
+        ImageView profIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/prof.png", 45, 30, 0, 220);
+        ImageView logoutImage = createImageView("file:src/main/resources/com/example/carpoolingapp/images/LoOutButton.png", 55, 299, -3, 305);
+        sidebar.setMinWidth(40);
+        sidebar.setPrefWidth(45);
+        sidebar.setMaxWidth(45);
+        sidebar.getChildren().addAll(profileIcon, homeIcon, profIcon,logoutImage);
 
         String pathImage = "file:src/main/resources/com/example/carpoolingapp/images/profile.png";
         // Offer Card 1
-        AnchorPane offerCard1 = createOfferCard(48, 277, "User Name", "Distance to user",pathImage);
+        AnchorPane offerCard1 = createOfferCard(53, 412, "User Name", "Distance to user",pathImage);
 
         // Offer Card 2
-        AnchorPane offerCard2 = createOfferCard(48, 365, "User Name", "Distance to user",pathImage);
+        AnchorPane offerCard2 = createOfferCard(53, 493, "User Name", "Distance to user",pathImage);
 
 
-        arrowIcon.setOnMouseClicked(event -> {
-            try {
-                homeProfileDriver homeProfileDriver = new homeProfileDriver();
-                Stage currentStage = (Stage) ((ImageView) event.getSource()).getScene().getWindow();
 
-                homeProfileDriver.start(currentStage);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-        // Title "Offres"
+        // Title
         Text title = new Text("Offres");
-        title.setLayoutX(22);
-        title.setLayoutY(265);
+        title.setLayoutX(34);
+        title.setLayoutY(400);
         title.setFill(javafx.scene.paint.Color.WHITE);
         title.setStyle("-fx-font-weight: bold;");
         title.setFont(Font.font("Aldhabi", 32));
 
-        // WebView - Charge une page HTML (vous pouvez remplacer cela par une image si nécessaire)
+        // WebView
         WebView webView = new WebView();
-        webView.setLayoutX(25);
+        webView.setLayoutX(17);
         webView.setLayoutY(14);
-        webView.setPrefSize(537, 226);
-        webView.getEngine().load("file:src/main/resources/com/example/carpoolingapp/webview-content.html");
-
+        webView.setPrefSize(630, 366);
+        webView.getEngine().load("file:src/main/resources/webview-content.html");
         // Add elements to root
         root.getChildren().addAll(sidebar, offerCard1, offerCard2, title, webView);
 
@@ -91,7 +85,7 @@ public class HomeSimpleDriver extends Application {
         AnchorPane card = new AnchorPane();
         card.setLayoutX(layoutX);
         card.setLayoutY(layoutY);
-        card.setPrefSize(511, 73);
+        card.setPrefSize(536, 73);
         card.setStyle("-fx-background-color: #2C2F48; -fx-background-radius: 20; -fx-border-color: #01B7C5; -fx-border-radius: 20;");
 
         // Profile Icon

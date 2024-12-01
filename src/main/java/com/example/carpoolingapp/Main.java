@@ -1,4 +1,4 @@
-package com.example.carpoolingapp;
+ package com.example.carpoolingapp;
 
 import com.example.carpoolingapp.microservices.auth.controller.LoginController;
 import com.example.carpoolingapp.model.DatabaseInitializer;
@@ -11,7 +11,8 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            DatabaseInitializer.initializeDatabase();
+            DatabaseInitializer.getConnection();
+            System.out.println("Connected to the database successfully.");
             LoginController loginController = new LoginController();
             new Login(loginController).show(stage);
         } catch (Exception e) {
