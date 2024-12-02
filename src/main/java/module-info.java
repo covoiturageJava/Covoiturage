@@ -13,6 +13,7 @@ module com.example.carpoolingapp {
     requires java.sql;
     requires javafx.swing;
     requires java.dotenv;
+    requires org.json;
 
     exports com.example.carpoolingapp.microservices.auth.controller;
     exports com.example.carpoolingapp.microservices.auth.view;

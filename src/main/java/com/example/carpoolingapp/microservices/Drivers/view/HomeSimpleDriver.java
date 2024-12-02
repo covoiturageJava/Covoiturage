@@ -1,74 +1,73 @@
 package com.example.carpoolingapp.microservices.Drivers.view;
 
+import javafx.animation.ScaleTransition;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class HomeSimpleDriver extends Application {
 
-    ImageView seeMoreIcon;
     @Override
     public void start(Stage stage) {
         // Root AnchorPane
         AnchorPane root = new AnchorPane();
-        root.setStyle("-fx-background-color: #1D203E;");
-        root.setPrefSize(624, 453);
+        root.setStyle("-fx-background-color: linear-gradient(to bottom, #1E2A78, #1D203E);");
+        root.setPrefSize(800, 600);
 
         // Sidebar
         AnchorPane sidebar = new AnchorPane();
-        sidebar.setLayoutX(581);
-        sidebar.setPrefSize(38, 453);
-        sidebar.setStyle("-fx-background-color: #2C2F48;");
+        sidebar.setLayoutX(750);
+        sidebar.setPrefSize(50, 600);
+        sidebar.setStyle("-fx-background-color: #2C2F48; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 0, 0);");
 
-        // Sidebar Icons (Modifiez les chemins relatifs en fonction de l'emplacement réel des images)
-       ImageView profileIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/profile.png", 42, 42, 1, 92);
-        ImageView arrowIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/Arrow.png", 24, 33, -12, 37);
-        ImageView homeIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/home.png", 44, 29, 0, 179);
-        ImageView profIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/prof.png", 44, 33, 0, 221);
+        // Sidebar Icons
+        ImageView profileIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/profile.png", 42, 42, 4, 100);
+        ImageView arrowIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/Arrow.png", 24, 33, 13, 50);
+        ImageView homeIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/home.png", 44, 29, 4, 150);
+        ImageView profIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/prof.png", 44, 33, 4, 200);
+
+        addHoverEffect(profileIcon);
+        addHoverEffect(arrowIcon);
+        addHoverEffect(homeIcon);
+        addHoverEffect(profIcon);
 
         sidebar.getChildren().addAll(profileIcon, arrowIcon, homeIcon, profIcon);
 
-        String pathImage = "file:src/main/resources/com/example/carpoolingapp/images/profile.png";
-        // Offer Card 1
-        AnchorPane offerCard1 = createOfferCard(48, 277, "User Name", "Distance to user",pathImage);
-
-        // Offer Card 2
-        AnchorPane offerCard2 = createOfferCard(48, 365, "User Name", "Distance to user",pathImage);
-
-
-        arrowIcon.setOnMouseClicked(event -> {
-            try {
-                homeProfileDriver homeProfileDriver = new homeProfileDriver();
-                Stage currentStage = (Stage) ((ImageView) event.getSource()).getScene().getWindow();
-
-                homeProfileDriver.start(currentStage);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
         // Title "Offres"
-        Text title = new Text("Offres");
-        title.setLayoutX(22);
-        title.setLayoutY(265);
-        title.setFill(javafx.scene.paint.Color.WHITE);
-        title.setStyle("-fx-font-weight: bold;");
-        title.setFont(Font.font("Aldhabi", 32));
+        Text title = new Text("Offres Disponibles");
+        title.setLayoutX(20);
+        title.setLayoutY(50);
+        title.setFill(Color.WHITE);
+        title.setFont(Font.font("Arial Black", 30));
 
-        // WebView - Charge une page HTML (vous pouvez remplacer cela par une image si nécessaire)
+        // WebView - Load HTML map
         WebView webView = new WebView();
-        webView.setLayoutX(25);
-        webView.setLayoutY(14);
-        webView.setPrefSize(537, 226);
-        webView.getEngine().load("file:src/main/resources/com/example/carpoolingapp/webview-content.html");
+        webView.setLayoutX(20);
+        webView.setLayoutY(70);
+        webView.setPrefSize(700, 300);
+
+        String htmlFilePath = getClass().getResource("/map.html").toExternalForm();
+        webView.getEngine().load(htmlFilePath);
+
+        // Offer Cards
+        AnchorPane offerCard1 = createOfferCard(20, 400, "John Doe", "3 km away", "file:src/main/resources/com/example/carpoolingapp/images/profile.png");
+        AnchorPane offerCard2 = createOfferCard(20, 480, "Jane Smith", "5 km away", "file:src/main/resources/com/example/carpoolingapp/images/profile.png");
+
+        // Sidebar Navigation Logic
+        arrowIcon.setOnMouseClicked(event -> redirectTo("profile"));
+        homeIcon.setOnMouseClicked(event -> redirectTo("home"));
 
         // Add elements to root
-        root.getChildren().addAll(sidebar, offerCard1, offerCard2, title, webView);
+        root.getChildren().addAll(sidebar, title, webView, offerCard1, offerCard2);
 
         // Create and set scene
         Scene scene = new Scene(root);
@@ -78,7 +77,6 @@ public class HomeSimpleDriver extends Application {
     }
 
     private ImageView createImageView(String imagePath, double fitWidth, double fitHeight, double layoutX, double layoutY) {
-        // Correct way to create the ImageView
         ImageView imageView = new ImageView(new Image(imagePath));
         imageView.setFitWidth(fitWidth);
         imageView.setFitHeight(fitHeight);
@@ -87,54 +85,45 @@ public class HomeSimpleDriver extends Application {
         imageView.setPreserveRatio(true);
         return imageView;
     }
+
     private AnchorPane createOfferCard(double layoutX, double layoutY, String userName, String distance, String profileImagePath) {
         AnchorPane card = new AnchorPane();
         card.setLayoutX(layoutX);
         card.setLayoutY(layoutY);
-        card.setPrefSize(511, 73);
-        card.setStyle("-fx-background-color: #2C2F48; -fx-background-radius: 20; -fx-border-color: #01B7C5; -fx-border-radius: 20;");
+        card.setPrefSize(700, 60);
+        card.setStyle("-fx-background-color: #2C2F48; -fx-background-radius: 10; -fx-border-color: #01B7C5; -fx-border-radius: 10;");
+        card.setEffect(new DropShadow(10, Color.BLACK));
 
         // Profile Icon
-        ImageView profileIcon = createImageView(profileImagePath, 66, 55, 12, 8);
+        ImageView profileIcon = createImageView(profileImagePath, 50, 50, 10, 5);
 
         // User Name Text
         Text userNameText = new Text(userName);
-        userNameText.setLayoutX(77);
-        userNameText.setLayoutY(29);
-        userNameText.setFill(javafx.scene.paint.Color.WHITE);
-        userNameText.setStyle("-fx-font-weight: bold;");
-        userNameText.setFont(Font.font("Arial Bold", 12));
+        userNameText.setLayoutX(70);
+        userNameText.setLayoutY(25);
+        userNameText.setFill(Color.WHITE);
+        userNameText.setFont(Font.font("Arial", 16));
 
         // Distance Text
         Text distanceText = new Text(distance);
-        distanceText.setLayoutX(77);
-        distanceText.setLayoutY(51);
-        distanceText.setFill(javafx.scene.paint.Color.WHITE);
-        distanceText.setFont(Font.font("Arial", 13));
+        distanceText.setLayoutX(70);
+        distanceText.setLayoutY(45);
+        distanceText.setFill(Color.LIGHTGRAY);
+        distanceText.setFont(Font.font("Arial", 12));
 
-        // See More Text and Icon
-        Text seeMoreText = new Text("See details");
-        seeMoreText.setLayoutX(434);
-        seeMoreText.setLayoutY(29);
-        seeMoreText.setFill(javafx.scene.paint.Color.WHITE);
-        seeMoreText.setFont(Font.font("System", 12));
-
-         seeMoreIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/seeMor.png", 30, 24, 450, 35);
-        seeMoreIcon.setOnMouseClicked(mouseEvent -> {
-            try{
-                HomeDetailsOffresDrivers DetailsOffre = new HomeDetailsOffresDrivers();
-                Stage currentStage = (Stage) ((ImageView)mouseEvent.getSource()).getScene().getWindow();
-                DetailsOffre.start(currentStage);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        });
-        // Add all elements to the card
-        card.getChildren().addAll(profileIcon, userNameText, distanceText, seeMoreIcon, seeMoreText);
+        card.getChildren().addAll(profileIcon, userNameText, distanceText);
         return card;
     }
 
+    private void addHoverEffect(ImageView icon) {
+        icon.setOnMouseEntered(event -> icon.setEffect(new DropShadow(10, Color.CYAN)));
+        icon.setOnMouseExited(event -> icon.setEffect(null));
+    }
 
+    private void redirectTo(String view) {
+        System.out.println("Redirecting to " + view + " view...");
+        // Implement redirection logic here
+    }
 
     public static void main(String[] args) {
         launch();

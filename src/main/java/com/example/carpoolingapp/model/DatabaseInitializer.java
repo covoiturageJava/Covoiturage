@@ -81,7 +81,6 @@ public class DatabaseInitializer {
                     + ")";
             statement.executeUpdate(createDriverTable);
             System.out.println("Table Drivers created.");
-
             String createAdminTable = "CREATE TABLE IF NOT EXISTS Admin ("
                     + "id INT AUTO_INCREMENT PRIMARY KEY, "
                     + "username VARCHAR(50) UNIQUE, "
@@ -90,6 +89,16 @@ public class DatabaseInitializer {
                     + ")";
             statement.executeUpdate(createAdminTable);
             System.out.println("Table Admin created.");
+            String createDriverSessionsTable = "CREATE TABLE IF NOT EXISTS DriverSessions ("
+                    + "id INT AUTO_INCREMENT PRIMARY KEY, "
+                    + "driver_id INT NOT NULL, "
+                    + "latitude DOUBLE NOT NULL, "
+                    + "longitude DOUBLE NOT NULL, "
+                    + "lastUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, "
+                    + "FOREIGN KEY (driver_id) REFERENCES Drivers(id) ON DELETE CASCADE"
+                    + ")";
+            statement.executeUpdate(createDriverSessionsTable);
+            System.out.println("Table DriverSessions created.");
         } catch (SQLException e) {
             System.err.println("Error creating tables: " + e.getMessage());
         }
