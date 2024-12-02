@@ -74,7 +74,8 @@ public class HomeDetailsOffresDrivers extends Application {
                 e.printStackTrace();
             }
         });
-        root.getChildren().addAll(sidebar, offerCard, title, webView);
+
+        root.getChildren().addAll(sidebar, offerCard1, title, webView);
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
