@@ -1,57 +1,55 @@
 package com.example.carpoolingapp.microservices.Drivers.view;
-        import javafx.application.Application;
-        import javafx.scene.Scene;
-        import javafx.scene.control.Button;
-        import javafx.scene.image.Image;
-        import javafx.scene.image.ImageView;
-        import javafx.scene.layout.AnchorPane;
-        import javafx.scene.text.Font;
-        import javafx.scene.text.Text;
-        import javafx.scene.web.WebView;
-        import javafx.stage.Stage;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 
 public class HomeDetailsOffresDrivers extends Application {
     Button acceptButton;
     Button deleteButton;
     @Override
     public void start(Stage stage) {
-        // Root pane
         AnchorPane root = new AnchorPane();
         root.setStyle("-fx-background-color: #1D203E;");
-        root.setPrefSize(624, 453);
-
-        // Sidebar
+        root.setPrefSize(664, 540);
         AnchorPane sidebar = new AnchorPane();
-        sidebar.setLayoutX(581);
-        sidebar.setPrefSize(38, 453);
+        sidebar.setLayoutX(657);
+        sidebar.setPrefSize(43, 550);
         sidebar.setStyle("-fx-background-color: #2C2F48;");
 
-        ImageView profileIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/profile.png", 42, 42, 1, 92);
-        ImageView arrowIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/Arrow.png", 24, 33, -12, 37);
-        ImageView homeIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/home.png", 44, 29, 0, 179);
-        ImageView profIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/prof.png", 44, 33, 0, 221);
+        ImageView profileIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/profile.png", 43, 43, 4, 92);
+        ImageView homeIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/home.png", 45, 25, 0, 180);
+        ImageView profIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/prof.png", 45, 30, 0, 220);
+        ImageView logoutImage = createImageView("file:src/main/resources/com/example/carpoolingapp/images/LoOutButton.png", 55, 299, -3, 305);
+        sidebar.setMinWidth(40);
+        sidebar.setPrefWidth(45);
+        sidebar.setMaxWidth(45);
 
-        sidebar.getChildren().addAll(profileIcon, arrowIcon, homeIcon, profIcon);
+        sidebar.getChildren().addAll(profileIcon, homeIcon, profIcon,logoutImage);
 
         String pathImage = "file:src/main/resources/com/example/carpoolingapp/images/profile.png";
-
-
         // Offer Card
-        AnchorPane offerCard = createOfferCard(48, 277, "User Name", "Distance to user", pathImage);
+        AnchorPane offerCard1 = createOfferCard( "User Name", "Distance to user", pathImage);
 
-        // Title
+
         Text title = new Text("Offres");
-        title.setLayoutX(22);
-        title.setLayoutY(265);
+        title.setLayoutX(34);
+        title.setLayoutY(400);
         title.setFill(javafx.scene.paint.Color.WHITE);
         title.setStyle("-fx-font-weight: bold;");
         title.setFont(Font.font("Aldhabi", 32));
 
         // WebView
         WebView webView = new WebView();
-        webView.setLayoutX(25);
+        webView.setLayoutX(17);
         webView.setLayoutY(14);
-        webView.setPrefSize(537, 226);
+        webView.setPrefSize(630, 366);
         webView.getEngine().load("file:src/main/resources/webview-content.html");
         acceptButton.setOnMouseClicked(mouseEvent -> {
             try{
@@ -68,8 +66,8 @@ public class HomeDetailsOffresDrivers extends Application {
                 HomeSimpleDriver homeSimpleDriver = new HomeSimpleDriver();
 
                 Stage currentStage = (Stage) ((Button) mouseEvent.getSource()).getScene().getWindow();
-
-                homeSimpleDriver.start(currentStage);
+//
+//                homeSimpleDriver.start(currentStage);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -93,11 +91,12 @@ public class HomeDetailsOffresDrivers extends Application {
         return imageView;
     }
 
-    private AnchorPane createOfferCard(double layoutX, double layoutY, String userName, String distance, String profileImagePath) {
+    private AnchorPane createOfferCard( String userName, String distance, String profileImagePath) {
         AnchorPane card = new AnchorPane();
-        card.setLayoutX(layoutX);
-        card.setLayoutY(layoutY);
-        card.setPrefSize(511, 127);
+
+        card.setLayoutX(50);
+        card.setLayoutY(413);
+        card.setPrefSize(526, 127);
         card.setStyle("-fx-background-color: #2C2F48; -fx-background-radius: 20; -fx-border-color: #01B7C5; -fx-border-radius: 20;");
 
         ImageView profileIcon = createImageView(profileImagePath, 70, 78, 7, 24);
@@ -135,7 +134,7 @@ public class HomeDetailsOffresDrivers extends Application {
         prixText.setStyle("-fx-font-weight: bold;");
         prixText.setFont(Font.font("Times New Roman Bold", 14));
 
-         acceptButton = new Button("Accepted");
+        acceptButton = new Button("Accepted");
         acceptButton.setLayoutX(384);
         acceptButton.setLayoutY(53);
         acceptButton.setPrefSize(118, 25);
@@ -157,4 +156,3 @@ public class HomeDetailsOffresDrivers extends Application {
         launch();
     }
 }
-

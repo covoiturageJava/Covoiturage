@@ -44,7 +44,6 @@ public class HomeSimpleDriver {
         AnchorPane sidebar = new AnchorPane();
         sidebar.setLayoutX(657);
         sidebar.setPrefWidth(43);
-        sidebar.setMaxWidth(42);
         sidebar.setPrefSize(43, 568);
         sidebar.setStyle("-fx-background-color: #2C2F48;");
 
@@ -53,11 +52,6 @@ public class HomeSimpleDriver {
         ImageView profIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/prof.png", 45, 30, 0, 220);
         ImageView logoutImage = createImageView("file:src/main/resources/com/example/carpoolingapp/images/LoOutButton.png", 55, 299, -3, 305);
         sidebar.getChildren().addAll(profileIcon, homeIcon, profIcon, logoutImage);
-
-        // Offer Cards
-        String pathImage = "file:src/main/resources/com/example/carpoolingapp/images/profile.png";
-        AnchorPane offerCard1 = createOfferCard(53, 412, "User Name", "Distance to user", pathImage);
-        AnchorPane offerCard2 = createOfferCard(53, 493, "User Name", "Distance to user", pathImage);
 
         // Title
         Text title = new Text("Offres");
@@ -80,8 +74,11 @@ public class HomeSimpleDriver {
         // Mise à jour périodique des coordonnées
         startLocationUpdater(driverId, webEngine);
 
+        // Vérification périodique des offres
+        startOfferUpdater(root, title);
+
         // Ajout des éléments à la racine
-        root.getChildren().addAll(sidebar, offerCard1, offerCard2, title, webView);
+        root.getChildren().addAll(sidebar, title, webView);
 
         // Création et affichage de la scène
         Scene scene = new Scene(root);
@@ -120,26 +117,94 @@ public class HomeSimpleDriver {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0, 1, TimeUnit.SECONDS); // Vérifiez toutes les secondes
+        }, 0, 1, TimeUnit.SECONDS);
     }
+
     private double[] getDriverCoordinates(int driverId) throws SQLException {
         Connection connection = DatabaseInitializer.getConnection();
         DatabaseInitializer.selectDatabase(connection);
         String sql = "SELECT latitude, longitude FROM driver_session WHERE driver_id = ?";
-        try (
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, driverId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                double latitude = rs.getDouble("latitude");
-                double longitude = rs.getDouble("longitude");
-                return new double[]{latitude, longitude};
+                return new double[]{rs.getDouble("latitude"), rs.getDouble("longitude")};
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return null;
     }
+
+    private void startOfferUpdater(AnchorPane root, Text title) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(() -> {
+            Platform.runLater(() -> updateOffers(root, title));
+        }, 0, 1, TimeUnit.SECONDS);
+    }
+
+    private void updateOffers(AnchorPane root, Text title) {
+        try {
+            ResultSet offers = fetchOffers();
+            root.getChildren().removeIf(node -> node.getId() != null && node.getId().startsWith("offerCard"));
+
+            if (offers != null) {
+                double layoutY = title.getLayoutY() + 20;
+                while (offers.next()) {
+                    int userId = offers.getInt("id_user");
+                    String distance = offers.getString("distance");
+                    double price = offers.getDouble("prix");
+                    String profileImagePath = "file:src/main/resources/com/example/carpoolingapp/images/prof.png";
+                    AnchorPane offerCard = createOfferCard(53, layoutY, userId, distance, price, profileImagePath);
+                    offerCard.setId("offerCard-" + userId);
+                    root.getChildren().add(offerCard);
+
+                    layoutY += 90;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private ResultSet fetchOffers() throws SQLException {
+        Connection connection = DatabaseInitializer.getConnection();
+        DatabaseInitializer.selectDatabase(connection);
+        String sql = "SELECT id_user, distance, prix FROM trajet WHERE etat = 1";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        return stmt.executeQuery();
+    }
+
+    private AnchorPane createOfferCard(double layoutX, double layoutY, int userId, String distance, double price, String profileImagePath) {
+        AnchorPane card = new AnchorPane();
+        card.setLayoutX(layoutX);
+        card.setLayoutY(layoutY);
+        card.setPrefSize(536, 73);
+        card.setStyle("-fx-background-color: #2C2F48; -fx-background-radius: 20; -fx-border-color: #01B7C5; -fx-border-radius: 20;");
+
+        ImageView profileIcon = createImageView(profileImagePath, 66, 55, 12, 8);
+
+        Text userIdText = new Text("User ID: " + userId);
+        userIdText.setLayoutX(77);
+        userIdText.setLayoutY(20);
+        userIdText.setFill(javafx.scene.paint.Color.WHITE);
+        userIdText.setStyle("-fx-font-weight: bold;");
+        userIdText.setFont(Font.font("Arial Bold", 12));
+
+        Text distanceText = new Text("Distance: " + distance);
+        distanceText.setLayoutX(77);
+        distanceText.setLayoutY(40);
+        distanceText.setFill(javafx.scene.paint.Color.WHITE);
+        distanceText.setFont(Font.font("Arial", 13));
+
+        Text priceText = new Text("Price: " + price + " MAD");
+        priceText.setLayoutX(77);
+        priceText.setLayoutY(60);
+        priceText.setFill(javafx.scene.paint.Color.LIGHTGREEN);
+        priceText.setFont(Font.font("Arial", 13));
+
+        card.getChildren().addAll(profileIcon, userIdText, distanceText, priceText);
+        return card;
+    }
+
     private ImageView createImageView(String imagePath, double fitWidth, double fitHeight, double layoutX, double layoutY) {
         ImageView imageView = new ImageView(new Image(imagePath));
         imageView.setFitWidth(fitWidth);
@@ -148,44 +213,5 @@ public class HomeSimpleDriver {
         imageView.setLayoutY(layoutY);
         imageView.setPreserveRatio(true);
         return imageView;
-    }
-    private AnchorPane createOfferCard(double layoutX, double layoutY, String userName, String distance, String profileImagePath) {
-        AnchorPane card = new AnchorPane();
-        card.setLayoutX(layoutX);
-        card.setLayoutY(layoutY);
-        card.setPrefSize(536, 73);
-        card.setStyle("-fx-background-color: #2C2F48; -fx-background-radius: 20; -fx-border-color: #01B7C5; -fx-border-radius: 20;");
-
-        ImageView profileIcon = createImageView(profileImagePath, 66, 55, 12, 8);
-        Text userNameText = new Text(userName);
-        userNameText.setLayoutX(77);
-        userNameText.setLayoutY(29);
-        userNameText.setFill(javafx.scene.paint.Color.WHITE);
-        userNameText.setStyle("-fx-font-weight: bold;");
-        userNameText.setFont(Font.font("Arial Bold", 12));
-
-        Text distanceText = new Text(distance);
-        distanceText.setLayoutX(77);
-        distanceText.setLayoutY(51);
-        distanceText.setFill(javafx.scene.paint.Color.WHITE);
-        distanceText.setFont(Font.font("Arial", 13));
-        Text seeMoreText = new Text("See details");
-        seeMoreText.setLayoutX(434);
-        seeMoreText.setLayoutY(29);
-        seeMoreText.setFill(javafx.scene.paint.Color.WHITE);
-        seeMoreText.setFont(Font.font("System", 12));
-
-        seeMoreIcon = createImageView("file:src/main/resources/com/example/carpoolingapp/images/seeMor.png", 30, 24, 450, 35);
-        seeMoreIcon.setOnMouseClicked(mouseEvent -> {
-            try {
-                HomeDetailsOffresDrivers detailsOffre = new HomeDetailsOffresDrivers();
-                Stage currentStage = (Stage) ((ImageView) mouseEvent.getSource()).getScene().getWindow();
-                detailsOffre.start(currentStage);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-        card.getChildren().addAll(profileIcon, userNameText, distanceText, seeMoreIcon, seeMoreText);
-        return card;
     }
 }

@@ -132,7 +132,7 @@ public class PickUpDriver extends Application {
                 try {
                     HomeSimpleDriver homePage = new HomeSimpleDriver();
                     Stage currentStage = (Stage) pickUpButton.getScene().getWindow();
-                    homePage.start(currentStage);
+//                    homePage.start(currentStage,sessionDriver);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
