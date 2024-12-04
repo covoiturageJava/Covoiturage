@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class ConfirmPage extends Application {
+public class ConfirmRequests extends Application {
 
     @Override
     public void start(Stage primaryStage) {

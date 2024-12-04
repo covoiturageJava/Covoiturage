@@ -11,7 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class Admin extends Application {
+public class ManageRequests extends Application {
     @Override
     public void start(Stage primaryStage) {
         // Create AnchorPane as the root layout
