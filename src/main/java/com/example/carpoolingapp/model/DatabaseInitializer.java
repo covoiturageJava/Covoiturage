@@ -6,7 +6,6 @@ import java.sql.*;
 
 public class DatabaseInitializer {
     private static final Dotenv dotenv = Dotenv.load();
-
     public static Connection getConnection() throws SQLException {
         String url = dotenv.get("DB_URL");
         String user = dotenv.get("DB_USER");
@@ -18,6 +17,7 @@ public class DatabaseInitializer {
             statement.execute("USE " + dotenv.get("DB_NAME"));
         }
     }
+
     public static void initializeDatabase() {
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
@@ -144,6 +144,6 @@ public class DatabaseInitializer {
         } catch (Exception e) {
             System.err.println("Erreur inattendue : " + e.getMessage());
             e.printStackTrace();
-        }
-    }
+}
+}
 }

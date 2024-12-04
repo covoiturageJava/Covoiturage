@@ -28,7 +28,13 @@ import java.util.List;
 import java.util.Map;
 
 public class HomePage {
+    private String username;
+    private String userUsername;
 
+    public void setUserInfo(String name, String username) {
+        this.username = name;
+        this.userUsername = username;
+    }
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final Map<String, String[]> placeCoordinates = new HashMap<>();
 
