@@ -14,6 +14,7 @@ module com.example.carpoolingapp {
     requires javafx.swing;
     requires java.dotenv;
     requires org.json;
+    requires jdk.httpserver;
 
     exports com.example.carpoolingapp.microservices.auth.controller;
     exports com.example.carpoolingapp.microservices.auth.view;

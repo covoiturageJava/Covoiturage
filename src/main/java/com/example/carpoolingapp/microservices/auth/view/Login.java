@@ -1,6 +1,10 @@
 package com.example.carpoolingapp.microservices.auth.view;
 
+import com.example.carpoolingapp.microservices.Drivers.view.HomeSimpleDriver;
+import com.example.carpoolingapp.microservices.Drivers.view.homeProfileDriver;
 import com.example.carpoolingapp.microservices.auth.controller.LoginController;
+import com.example.carpoolingapp.model.DatabaseInitializer;
+import com.example.carpoolingapp.model.SessionDriver;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -11,6 +15,8 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.sql.SQLException;
+
 public class Login {
 
  private final LoginController loginController;
@@ -20,7 +26,6 @@ public class Login {
  }
 
  public void show(Stage stage) {
-  // Left pane
   AnchorPane leftPane = new AnchorPane();
   leftPane.setPrefSize(294, 500);
   leftPane.setStyle("-fx-background-color: #0598ff;");
@@ -120,6 +125,7 @@ public class Login {
   BorderPane mainLayout = new BorderPane();
   mainLayout.setLeft(leftPane);
   mainLayout.setCenter(centrePane);
+  mainLayout.setMinSize(624, 453);
 
   Scene scene = new Scene(mainLayout, 700, 500);
   stage.setScene(scene);
@@ -152,14 +158,30 @@ public class Login {
     return;
    }
 
-   boolean loginSuccess = loginController.login(identifier, password, userType);
-
-   if (loginSuccess) {
-    alert.setContentText("Login successful.");
-    alert.show();
-   } else {
-    alert.setContentText("Invalid credentials.");
-    alert.show();
+   if ("Driver".equals(userType)) {
+       SessionDriver sessionDriver = null;
+       try {
+           sessionDriver = loginController.loginDriver(identifier, password);
+       } catch (SQLException e) {
+           throw new RuntimeException(e);
+       }
+       if (sessionDriver != null) {
+     try {
+      Stage currentStage = (Stage) loginB.getScene().getWindow();
+      currentStage.close();
+      HomeSimpleDriver driverView = new HomeSimpleDriver();
+      Stage newStage = new Stage();
+      driverView.start(newStage, sessionDriver);
+     } catch (Exception e) {
+      e.printStackTrace();
+     }
+    }
+  } else {
+    boolean loginSuccess = loginController.login(identifier, password, userType);
+    if (loginSuccess) {
+     alert.setContentText("User type redirection not implemented.");
+     alert.show();
+    }
    }
   });
 

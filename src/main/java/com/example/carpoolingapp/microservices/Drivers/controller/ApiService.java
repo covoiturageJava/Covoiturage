@@ -8,7 +8,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ApiService {
-
     public static JSONObject getRouteData() throws Exception {
         String osrmUrl = "http://localhost:5000/route/v1/driving/-8.8744460,30.4914000;-8.8808960,30.4755640?overview=full&geometries=geojson";
         URL url = new URL(osrmUrl);
@@ -23,7 +22,6 @@ public class ApiService {
         in.close();
         return new JSONObject(response.toString());
     }
-
     public static double[][] getCoordinates() throws Exception {
         JSONObject routeData = getRouteData();
         return RouteParser.extractCoordinates(routeData);
