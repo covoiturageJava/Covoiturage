@@ -5,6 +5,7 @@ import com.example.carpoolingapp.microservices.auth.controller.LoginController;
 import com.example.carpoolingapp.microservices.auth.controller.driverController;
 import com.example.carpoolingapp.microservices.auth.controller.userController;
 import com.example.carpoolingapp.model.Driver;
+import com.example.carpoolingapp.model.User;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -164,7 +165,8 @@ public class Login {
     alert.setContentText("Login successful.");
     alert.show();
     if ("User".equals(userType)) {
-     HomePage testPage = new HomePage();
+     User user = loginController.getUser(identifier);
+     HomePage testPage = new HomePage(user);
      testPage.show(stage);
     }
 
