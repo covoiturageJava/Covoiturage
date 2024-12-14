@@ -163,68 +163,27 @@ public class ConfirmRequests extends Application {
                             String subject = "Request Approved";
                             String body = "Congratulations, your driver account has just been confirmed.\n" +
                                     "\n" +
-                                    "Before starting, ensure you have the following installed: Docker (On your desktop), ExpoGo (On your mobile device)\n" +
+                                    "Before starting, ensure you have the following installed: Docker and nodejs (On your desktop), ExpoGo (On your mobile device)\n" +
                                     "\n" +
-                                    "1- Run the following commands to pull the required Docker images from Docker Hub:\n" +
+                                    "1- Run the following commands to pull the app to your desktop:\n" +
                                     "\n" +
-                                    "docker pull mehkad/frontend:latest\n" +
-                                    "docker pull mehkad/backend:latest\n" +
-                                    "docker pull mehkad/database:latest\n" +
+                                    "\tgit clone https://github.com/covoiturageJava/carpoolingMobile.git\n" +
                                     "\n" +
-                                    "2- Create a docker-compose.yml file in your project directory and paste the following configuration:\n" +
+                                    "- Or download it via the link : https://github.com/covoiturageJava/carpoolingMobile/archive/refs/heads/main.zip\n" +
                                     "\n" +
-                                    "version: '3.8'\n" +
+                                    "2- Navigate to the directories /carpoolingMobile/backend and run : npm i\n" +
                                     "\n" +
-                                    "services:\n" +
-                                    "  backend:\n" +
-                                    "    image: mehkad/backend:latest\n" +
-                                    "    ports:\n" +
-                                    "      - \"6666:6666\"\n" +
-                                    "    environment:\n" +
-                                    "      - DB_HOST=carpooling-db\n" +
-                                    "      - DB_PORT=3306\n" +
-                                    "      - DB_USER=adminuser\n" +
-                                    "      - DB_PASSWORD=azerty123$$\n" +
-                                    "      - DB_NAME=carpooling\n" +
-                                    "    depends_on:\n" +
-                                    "      - database\n" +
+                                    "3- Navigate to the directories /carpoolingMobile/carpoolingMobile and run : npm i\n" +
                                     "\n" +
-                                    "  frontend:\n" +
-                                    "    image: mehkad/frontend:latest\n" +
-                                    "    ports:\n" +
-                                    "      - \"8081:8081\"\n" +
-                                    "      - \"19000:19000\"\n" +
-                                    "      - \"19001:19001\"\n" +
-                                    "      - \"19002:19002\"\n" +
-                                    "      - \"19006:19006\"\n" +
-                                    "    environment:\n" +
-                                    "      - CHOKIDAR_USEPOLLING=true\n" +
-                                    "      - REACT_NATIVE_PACKAGER_HOSTNAME=${SERVER_IP_ADDRESS}\n" +
-                                    "    depends_on:\n" +
-                                    "      - backend\n" +
+                                    "4- Navigate to /carpoolingMobile/carpoolingMobile/App.js and edit the \"serverIpAddress\" with your ip address\n" +
                                     "\n" +
-                                    "  database:\n" +
-                                    "    image: mehkad/database:latest\n" +
-                                    "    container_name: carpooling-db\n" +
-                                    "    ports:\n" +
-                                    "      - \"3306:3306\"\n" +
-                                    "    environment:\n" +
-                                    "      MYSQL_ROOT_PASSWORD: azerty123$$\n" +
-                                    "      MYSQL_DATABASE=carpooling\n" +
-                                    "      MYSQL_USER=adminuser\n" +
-                                    "      MYSQL_PASSWORD=azerty123$$\n" +
+                                    "5- Go back to the root of the app /carpoolingMobile, where the docker-compose.yml is located\n" +
                                     "\n" +
-                                    "3- Before running the application, set the SERVER_IP_ADDRESS environment variable to your local machine's IP address. Use the following command based on your operating system:\n" +
+                                    "6- Edit the \"REACT_NATIVE_PACKAGER_HOSTNAME\" (line 29) environment to hold your ip address\n" +
                                     "\n" +
-                                    "- For Windows (PowerShell): $env:SERVER_IP_ADDRESS=\"<Your-IP-Address>\"\n" +
-                                    "- For Windows (CMD): env: SERVER_IP_ADDRESS=\"<Your-IP-Address>\"\n" +
-                                    "- For Linux/Mac: export SERVER_IP_ADDRESS=\"<Your-IP-Address>\"\n" +
+                                    "7- run: docker-compose up --build (this may take some time)\n" +
                                     "\n" +
-                                    "Replace <Your-IP-Address> with your actual IP address.\n" +
-                                    "\n" +
-                                    "4- To start all the services, navigate to the directory containing the docker-compose.yml file and run: docker-compose up\n" +
-                                    "\n" +
-                                    "5- Access the Application: Visit ExpoGo app on your mobile, and scan the QR code.";
+                                    "8- Access the Application: Visit ExpoGo app on your mobile, and scan the QR code.";
                             EmailSender.sendEmail(email, subject, body);
                             showAlert("Success", "Driver state updated to 'Confirmed' and email sent.", Alert.AlertType.INFORMATION);
                         }
