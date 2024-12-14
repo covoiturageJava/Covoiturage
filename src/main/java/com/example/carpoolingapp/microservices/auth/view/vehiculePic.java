@@ -106,6 +106,7 @@ public class vehiculePic {
             ImageVerification vehiculePicView = new ImageVerification();
             Stage nextStage = new Stage();
             vehiculePicView.show(nextStage, driver);
+            currentStage.close();
         }
     }
     /**

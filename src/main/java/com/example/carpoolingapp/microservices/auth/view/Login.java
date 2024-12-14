@@ -2,8 +2,13 @@ package com.example.carpoolingapp.microservices.auth.view;
 
 import com.example.carpoolingapp.microservices.Drivers.view.HomeSimpleDriver;
 import com.example.carpoolingapp.microservices.Drivers.view.homeProfileDriver;
+import com.example.carpoolingapp.microservices.User.view.HomePage;
 import com.example.carpoolingapp.microservices.auth.controller.LoginController;
 import com.example.carpoolingapp.microservices.auth.serveur.SocClient;
+import com.example.carpoolingapp.microservices.auth.controller.driverController;
+import com.example.carpoolingapp.microservices.auth.controller.userController;
+import com.example.carpoolingapp.model.Driver;
+import com.example.carpoolingapp.model.User;
 import com.example.carpoolingapp.model.DatabaseInitializer;
 import com.example.carpoolingapp.model.SessionDriver;
 import javafx.animation.PauseTransition;
@@ -137,6 +142,7 @@ public class Login {
   stage.setTitle("Login - Carpooling App");
   stage.show();
 
+  signUpButton.setOnAction(event -> showRegistrationSelection(stage));
 
   loginB.setOnAction(event -> {
    Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -218,4 +224,49 @@ public class Login {
   delay.setOnFinished(e -> alert.close());
   delay.play();
  }
+
+ private void showRegistrationSelection(Stage stage) {
+  AnchorPane selectionPane = new AnchorPane();
+  selectionPane.setPrefSize(400, 300);
+
+  Label titleLabel = new Label("Choose Registration Type");
+  titleLabel.setFont(Font.font("System", FontWeight.BOLD, 20));
+  titleLabel.setLayoutX(80);
+  titleLabel.setLayoutY(50);
+
+  Button driverButton = new Button("Driver Registration");
+  driverButton.setLayoutX(100);
+  driverButton.setLayoutY(120);
+  driverButton.setPrefWidth(200);
+  driverButton.setStyle("-fx-background-color: #1ec9cf;");
+  driverButton.setTextFill(Color.WHITE);
+  driverButton.setFont(Font.font("System", FontWeight.BOLD, 13));
+
+  Button userButton = new Button("Normal User Registration");
+  userButton.setLayoutX(100);
+  userButton.setLayoutY(180);
+  userButton.setPrefWidth(200);
+  userButton.setStyle("-fx-background-color: #1ec9cf;");
+  userButton.setTextFill(Color.WHITE);
+  userButton.setFont(Font.font("System", FontWeight.BOLD, 13));
+
+  selectionPane.getChildren().addAll(titleLabel, driverButton, userButton);
+
+  Scene selectionScene = new Scene(selectionPane, 400, 300);
+  stage.setScene(selectionScene);
+
+  driverButton.setOnAction(event -> {
+   driverController driverCtrl = new driverController();
+   driverregister driverRegister = new driverregister();
+   Scene driverScene = driverRegister.getDriverRegisterScene(new Driver());
+   stage.setScene(driverScene);
+  });
+
+  userButton.setOnAction(event -> {
+   userController userCtrl = new userController();
+   new userregister(stage, userCtrl, loginController);
+  });
+ }
+
+
 }

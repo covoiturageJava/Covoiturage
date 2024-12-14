@@ -3,6 +3,7 @@ package com.example.carpoolingapp.microservices.auth.controller;
 import com.example.carpoolingapp.model.DatabaseInitializer;
 import com.example.carpoolingapp.model.SessionDriver;
 import javafx.scene.control.Alert;
+import com.example.carpoolingapp.model.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,6 +16,7 @@ public class LoginController {
         try {
             Connection connection = DatabaseInitializer.getConnection();
             DatabaseInitializer.selectDatabase(connection);
+
             switch (choice) {
                 case "User":
                     return loginUser(connection, emailOrUsername, password);
@@ -105,12 +107,40 @@ public class LoginController {
             stmt.setString(1, emailOrUsername);
             stmt.setString(2, emailOrUsername);
             stmt.setString(3, password);
+
             ResultSet rs = stmt.executeQuery();
             return rs.next();
         } catch (SQLException e) {
             System.err.println("Error during authentication: " + e.getMessage());
             return false;
         }
+    }
+    public User getUser(String emailOrUsername) {
+        String sql = "SELECT * FROM Users WHERE email = ? OR username = ?";
+        try {
+            Connection connection = DatabaseInitializer.getConnection();
+            DatabaseInitializer.selectDatabase(connection);
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, emailOrUsername);
+            stmt.setString(2, emailOrUsername);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new User(
+                        rs.getInt("id"),
+                        rs.getString("firstName"),
+                        rs.getString("lastName"),
+                        rs.getString("username"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("phoneNumber"),
+                        rs.getString("birthDate"),
+                        rs.getString("creationDate")
+                );
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving user: " + e.getMessage());
+        }
+        return null;
     }
 
     private void showAlert(String title, String content) {
