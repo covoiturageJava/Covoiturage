@@ -183,29 +183,62 @@ public class Login {
 
    if ("Driver".equals(userType)) {
     System.out.println("UI: Attempting to login as DRIVER.");
-    Object response = socClient.connectAsDriver(identifier, password);
+    Object response = null;
+
+    try {
+     // Essayer de se connecter en tant que DRIVER
+     response = socClient.connectAsDriver(identifier, password);
+    } catch (Exception e) {
+     // Gérer l'exception et afficher une alerte à l'utilisateur
+     System.err.println("UI: An error occurred while attempting to login as DRIVER.");
+     alert.setContentText("An unexpected error occurred. Please try again.");
+     alert.show();
+     autoCloseAlert(alert, 4);
+     return; // Arrêter le processus de connexion en cas d'erreur
+    }
+
+    // Vérification si la réponse est null
+    if (response == null) {
+     System.out.println("UI: DRIVER login failed. Response is null.");
+     alert.setContentText("Driver login failed. Please check your credentials.");
+     alert.show();
+     autoCloseAlert(alert, 4);
+     return; // Arrêter le processus car la connexion a échoué
+    }
+
+    // Vérification si la réponse est une instance de SessionDriver
     if (response instanceof SessionDriver) {
      System.out.println("UI: DRIVER login successful.");
      alert.setContentText("Driver login successful!");
      alert.show();
      autoCloseAlert(alert, 4);
+
      SessionDriver sessionDriver = (SessionDriver) response;
      Stage currentStage = (Stage) loginB.getScene().getWindow();
      currentStage.close();
+
      HomeSimpleDriver driverView = new HomeSimpleDriver();
      Stage newStage = new Stage();
-        try {
-            driverView.start(newStage, sessionDriver);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+
+     try {
+      // Charger la vue du conducteur
+      driverView.start(newStage, sessionDriver);
+     } catch (Exception e) {
+      // Gérer une erreur lors du chargement de la vue
+      System.err.println("UI: Error occurred while opening the DRIVER view.");
+      alert.setContentText("An error occurred while loading the driver dashboard.");
+      alert.show();
+      autoCloseAlert(alert, 4);
+     }
     } else {
-     System.out.println("UI: DRIVER login failed.");
-     alert.setContentText("Login failed for Driver. Please check your credentials.");
+     // Cas inattendu : réponse non nulle mais pas une instance de SessionDriver
+     System.err.println("UI: Unexpected response type for DRIVER login.");
+     alert.setContentText("An unexpected error occurred. Please try again.");
      alert.show();
-     autoCloseAlert(alert, 3);
+     autoCloseAlert(alert, 4);
     }
-   } else {
+   }
+   else {
     System.out.println("UI: Attempting to login as " + userType + ".");
     boolean isAuthenticated = socClient.connectAsUserOrAdmin(identifier, password, userType);
     if (isAuthenticated) {
