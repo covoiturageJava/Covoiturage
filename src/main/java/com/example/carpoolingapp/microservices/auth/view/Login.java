@@ -214,12 +214,13 @@ public class Login {
       HomePage testPage = new HomePage(user);
       testPage.show(stage);
      }
-    }else if ("Admin".equals(userType)) {
-     try {
-      new MainAdmin().start(new Stage());
-      ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
-     } catch (Exception e) {
-      e.printStackTrace();
+     else if ("Admin".equals(userType)) {
+      try {
+       new MainAdmin().start(new Stage());
+       ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
+      } catch (Exception e) {
+       e.printStackTrace();
+      }
      }
     }
     else {
@@ -230,7 +231,6 @@ public class Login {
     }
    }
   });
-
  }
  private void autoCloseAlert(Alert alert, int seconds) {
   PauseTransition delay = new PauseTransition(Duration.seconds(seconds));

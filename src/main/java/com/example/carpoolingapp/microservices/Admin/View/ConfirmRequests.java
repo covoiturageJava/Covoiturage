@@ -1,10 +1,12 @@
 package com.example.carpoolingapp.microservices.Admin.View;
 
+import com.example.carpoolingapp.microservices.Admin.Controller.AdminController;
 import com.example.carpoolingapp.microservices.Admin.Controller.EmailSender;
 import com.example.carpoolingapp.model.DatabaseInitializer;
 import jakarta.mail.MessagingException;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -16,6 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -65,16 +68,60 @@ public class ConfirmRequests extends Application {
         confirmButton.setLayoutY(633);
         confirmButton.setPrefSize(150, 35);
         confirmButton.setFont(new Font(14));
-        confirmButton.setOnAction(event ->confirmRequest());
+        confirmButton.setOnAction(event ->{confirmRequest();
+            AdminController adminController = new AdminController(primaryStage);
+            adminController.showManageRequestsView();
+            Node source = (Node) event.getSource();
+            if (source != null) {
+                Scene scene = source.getScene();
+                if (scene != null) {
+                    Window window = scene.getWindow();
+                    if (window != null && window instanceof Stage) {
+                        ((Stage) window).close();
+                    }
+                }
+            }
+        });
+        Button return1 = new Button("Return");
+        return1.setLayoutX(381);
+        return1.setLayoutY(633);
+        return1.setPrefSize(150, 35);
+        return1.setFont(new Font(14));
+        return1.setOnAction(event -> {
+            AdminController adminController = new AdminController(primaryStage);
+            adminController.showManageRequestsView();
+            Node source = (Node) event.getSource();
+            if (source != null) {
+                Scene scene = source.getScene();
+                if (scene != null) {
+                    Window window = scene.getWindow();
+                    if (window != null && window instanceof Stage) {
+                        ((Stage) window).close();
+                    }
+                }
+            }
+        });
 
         Button rejectButton = new Button("Reject Request");
         rejectButton.setLayoutX(737);
         rejectButton.setLayoutY(633);
         rejectButton.setPrefSize(150, 35);
         rejectButton.setFont(new Font(14));
-        rejectButton.setOnAction(event ->
-            rejectRequest());
-
+        rejectButton.setOnAction(event ->{rejectRequest();
+                    AdminController adminController = new AdminController(primaryStage);
+                    adminController.showManageRequestsView();
+                    Node source = (Node) event.getSource();
+                    if (source != null) {
+                        Scene scene = source.getScene();
+                        if (scene != null) {
+                            Window window = scene.getWindow();
+                            if (window != null && window instanceof Stage) {
+                                ((Stage) window).close();
+                            }
+                        }
+                    }
+                }
+            );
         ImageView protectionImageView = new ImageView();
         Image protectionImage = new Image(getClass().getResourceAsStream("/protection.png"));
         protectionImageView.setImage(protectionImage);
@@ -91,7 +138,7 @@ public class ConfirmRequests extends Application {
         label.setPrefSize(537, 50);
         label.setFont(new Font(36));
 
-        root.getChildren().addAll(scrollPane, confirmButton, rejectButton, protectionImageView, label);
+        root.getChildren().addAll(scrollPane,return1, confirmButton, rejectButton, protectionImageView, label);
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);

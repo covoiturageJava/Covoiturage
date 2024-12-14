@@ -25,7 +25,6 @@ public class SocServeur {
             e.printStackTrace();
         }
     }
-
     private static void handleClient(Socket clientSocket) {
         System.out.println("Server: Handling a new client.");
         try (ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
@@ -52,7 +51,6 @@ public class SocServeur {
             e.printStackTrace();
         }
     }
-
     private static SessionDriver authenticateDriver(String emailOrUsername, String password) throws SQLException {
         System.out.println("Server: Calling login method for DRIVER.");
         LoginController log = new LoginController();

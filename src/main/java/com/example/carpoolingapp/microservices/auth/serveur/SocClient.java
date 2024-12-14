@@ -43,13 +43,11 @@ public class SocClient {
         try (Socket socket = new Socket(host, port);
              ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
              ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
-
             System.out.println("Client: Connected to server.");
             out.writeObject(userType);
             out.writeObject(emailOrUsername);
             out.writeObject(password);
             System.out.println("Client: Sent " + userType + " credentials to server.");
-
             boolean response = (boolean) in.readObject();
             System.out.println("Client: Received authentication result: " + response);
             return response;

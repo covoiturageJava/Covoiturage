@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -63,10 +64,21 @@ public class ManageRequests extends Application {
         colPhoneNumber.setPrefWidth(145.6);
 
         tableView.getColumns().addAll(colFirstName, colLastName, colEmail, colPhoneNumber);
-
         ObservableList<ObservableList<String>> driverList = getDriversFromDatabase();
         tableView.setItems(driverList);
-
+        Button return1 = new Button("Return");
+        return1.setLayoutX(696.0);
+        return1.setLayoutY(410.0);
+        return1.setPrefSize(178.0, 47.0);
+        return1.setStyle("-fx-background-radius: 10;");
+        return1.setFont(Font.font("System Bold", 14.0));
+        return1.setOnAction(event -> { try {
+            new MainAdmin().start(new Stage());
+            ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        });
         Button button = new Button("See Driver To Confirm");
         button.setLayoutX(696.0);
         button.setLayoutY(343.0);
@@ -78,7 +90,6 @@ public class ManageRequests extends Application {
             if (selectedDriver != null) {
                 int driverId = Integer.parseInt(selectedDriver.get(0));
                 ObservableList<Image> images = getDriverImages(driverId);
-
                 ConfirmRequests confirmRequests = new ConfirmRequests(images,driverId ); // Pass driverId and images
                 Stage confirmStage = new Stage();
                 try {
@@ -86,11 +97,13 @@ public class ManageRequests extends Application {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
             }
+
         });
 
 
-        root.getChildren().addAll(imageView1, tableView, button);
+        root.getChildren().addAll(imageView1, tableView, button,return1);
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Manage Requests");

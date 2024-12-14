@@ -3,6 +3,7 @@ import com.example.carpoolingapp.model.DatabaseInitializer;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -25,20 +26,25 @@ public class DriversUsersView extends Application {
                 "-fx-background-size: cover; " +
                 "-fx-background-repeat: no-repeat;");
 
-        Button btnSeeDetails = new Button("See Details");
+        Button btnSeeDetails = new Button("Retourn");
         btnSeeDetails.setLayoutX(781.0);
         btnSeeDetails.setLayoutY(645.0);
         btnSeeDetails.setPrefSize(93.0, 38.0);
         btnSeeDetails.setStyle("-fx-background-color: #61a87a; -fx-background-radius: 10; -fx-text-fill: white;");
         btnSeeDetails.setFont(Font.font("System Bold", 14.0));
-
+        btnSeeDetails.setOnAction(event -> { try {
+            new MainAdmin().start(new Stage());
+            ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        });
         Button btnDelete = new Button("Delete");
         btnDelete.setLayoutX(672.0);
         btnDelete.setLayoutY(645.0);
         btnDelete.setPrefSize(94.0, 38.0);
         btnDelete.setStyle("-fx-background-color: #61a87a; -fx-background-radius: 10; -fx-text-fill: white;");
         btnDelete.setFont(Font.font("System Bold", 14.0));
-
         TableView<Driver> driversTable = new TableView<>(driversList);
         driversTable.setLayoutX(14.0);
         driversTable.setLayoutY(173.0);
@@ -63,31 +69,20 @@ public class DriversUsersView extends Application {
                 createTableColumn("Email", "email", 264.0),
                 createTableColumn("Phone Number", "phoneNumber", 160.0)
         );
-
         btnDelete.setOnAction(event -> deleteSelectedItem(driversTable, usersTable));
-
         ImageView imageView = new ImageView();
         Image image = new Image(getClass().getResource("/protection.png").toExternalForm());
         imageView.setImage(image);
         imageView.setLayoutX(748.0);
         imageView.setLayoutY(27.0);
-        imageView.setFitWidth(127.0);
+        imageView.setFitWidth(100.0);
         imageView.setFitHeight(108.0);
         imageView.setPickOnBounds(true);
         imageView.setPreserveRatio(true);
-
-        Label lblWelcome = new Label("Welcome Mr.Mehdi Kadiri");
-        lblWelcome.setLayoutX(335.0);
-        lblWelcome.setLayoutY(42.0);
-        lblWelcome.setPrefSize(247.0, 38.0);
-        lblWelcome.setTextFill(javafx.scene.paint.Color.web("#0d3696"));
-        lblWelcome.setFont(Font.font("System Bold Italic", 18.0));
-
         Separator separator = new Separator();
         separator.setLayoutX(-4.0);
         separator.setLayoutY(385.0);
         separator.setPrefWidth(926.0);
-
         Label lblDrivers = new Label("Drivers      :");
         lblDrivers.setLayoutX(35.0);
         lblDrivers.setLayoutY(140.0);
@@ -100,7 +95,7 @@ public class DriversUsersView extends Application {
         lblUsers.setPrefSize(140.0, 18.0);
         lblUsers.setFont(Font.font("System Bold", 16.0));
         root.getChildren().addAll(
-                btnSeeDetails, btnDelete, driversTable, usersTable, imageView, lblWelcome,lblDrivers,lblUsers,separator
+                btnSeeDetails, btnDelete, driversTable, usersTable, imageView, lblDrivers,lblUsers,separator
         );
 
         loadData();
