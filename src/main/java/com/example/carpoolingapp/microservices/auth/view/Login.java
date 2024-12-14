@@ -1,15 +1,20 @@
 package com.example.carpoolingapp.microservices.auth.view;
 
+import com.example.carpoolingapp.microservices.Admin.View.MainAdmin;
 import com.example.carpoolingapp.microservices.Drivers.view.HomeSimpleDriver;
 import com.example.carpoolingapp.microservices.Drivers.view.homeProfileDriver;
 import com.example.carpoolingapp.microservices.User.view.HomePage;
 import com.example.carpoolingapp.microservices.auth.controller.LoginController;
+import com.example.carpoolingapp.microservices.auth.serveur.SocClient;
 import com.example.carpoolingapp.microservices.auth.controller.driverController;
 import com.example.carpoolingapp.microservices.auth.controller.userController;
 import com.example.carpoolingapp.model.Driver;
 import com.example.carpoolingapp.model.User;
 import com.example.carpoolingapp.model.DatabaseInitializer;
 import com.example.carpoolingapp.model.SessionDriver;
+import javafx.animation.PauseTransition;
+import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -19,17 +24,22 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.sql.SQLException;
 
 public class Login {
 
  private final LoginController loginController;
+ SocClient socClient = new SocClient();
 
+ public Login(LoginController loginController, SocClient socClient) {
+  this.loginController = loginController;
+  this.socClient = socClient;
+ }
  public Login(LoginController loginController) {
   this.loginController = loginController;
  }
-
  public void show(Stage stage) {
   AnchorPane leftPane = new AnchorPane();
   leftPane.setPrefSize(294, 500);
@@ -42,7 +52,6 @@ public class Login {
   appTitle.setLayoutY(228);
   leftPane.getChildren().add(appTitle);
 
-  // Center pane
   AnchorPane centrePane = new AnchorPane();
   centrePane.setPrefSize(415, 500);
 
@@ -60,7 +69,6 @@ public class Login {
   passwordField.setPrefSize(193, 27);
   passwordField.setStyle("-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 0px 0px 2px 0px;");
 
-  // Checkboxes for user roles
   CheckBox adminCheckbox = new CheckBox("Admin");
   adminCheckbox.setLayoutX(108);
   adminCheckbox.setLayoutY(200);
@@ -73,7 +81,6 @@ public class Login {
   normalUserCheckbox.setLayoutX(250);
   normalUserCheckbox.setLayoutY(200);
 
-  // Handle mutual exclusivity manually
   adminCheckbox.setOnAction(event -> {
    if (adminCheckbox.isSelected()) {
     driverCheckbox.setSelected(false);
@@ -156,50 +163,81 @@ public class Login {
    if (userType == null) {
     alert.setContentText("Please select a user type.");
     alert.show();
+    autoCloseAlert(alert, 3);
     return;
    }
 
    if (identifier.isEmpty()) {
     alert.setContentText("Please enter your email or username.");
     alert.show();
+    autoCloseAlert(alert, 3);
+    return;
+   }
+
+   if (password.isEmpty()) {
+    alert.setContentText("Please enter your password.");
+    alert.show();
+    autoCloseAlert(alert, 3);
     return;
    }
 
    if ("Driver".equals(userType)) {
-       SessionDriver sessionDriver = null;
-       try {
-           sessionDriver = loginController.loginDriver(identifier, password);
-       } catch (SQLException e) {
-           throw new RuntimeException(e);
-       }
-       if (sessionDriver != null) {
-     try {
-      Stage currentStage = (Stage) loginB.getScene().getWindow();
-      currentStage.close();
-      HomeSimpleDriver driverView = new HomeSimpleDriver();
-      Stage newStage = new Stage();
-      driverView.start(newStage, sessionDriver);
-     } catch (Exception e) {
-      e.printStackTrace();
-     }
+    System.out.println("UI: Attempting to login as DRIVER.");
+    Object response = socClient.connectAsDriver(identifier, password);
+    if (response instanceof SessionDriver) {
+     System.out.println("UI: DRIVER login successful.");
+     alert.setContentText("Driver login successful!");
+     alert.show();
+     autoCloseAlert(alert, 4);
+     SessionDriver sessionDriver = (SessionDriver) response;
+     Stage currentStage = (Stage) loginB.getScene().getWindow();
+     currentStage.close();
+     HomeSimpleDriver driverView = new HomeSimpleDriver();
+     Stage newStage = new Stage();
+        try {
+            driverView.start(newStage, sessionDriver);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    } else {
+     System.out.println("UI: DRIVER login failed.");
+     alert.setContentText("Login failed for Driver. Please check your credentials.");
+     alert.show();
+     autoCloseAlert(alert, 3);
     }
-  } else {
-    boolean loginSuccess = loginController.login(identifier, password, userType);
-    if (loginSuccess) {
+   } else {
+    System.out.println("UI: Attempting to login as " + userType + ".");
+    boolean isAuthenticated = socClient.connectAsUserOrAdmin(identifier, password, userType);
+    if (isAuthenticated) {
      if ("User".equals(userType)) {
       User user = loginController.getUser(identifier);
       HomePage testPage = new HomePage(user);
       testPage.show(stage);
      }
-
-    } else {
-     alert.setContentText("Invalid credentials.");
+    }else if ("Admin".equals(userType)) {
+     try {
+      new MainAdmin().start(new Stage());
+      ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
+     } catch (Exception e) {
+      e.printStackTrace();
+     }
+    }
+    else {
+     System.out.println("UI: " + userType + " login failed.");
+     alert.setContentText("Login failed for " + userType + ". Please check your credentials.");
      alert.show();
+     autoCloseAlert(alert, 3);
     }
    }
   });
 
  }
+ private void autoCloseAlert(Alert alert, int seconds) {
+  PauseTransition delay = new PauseTransition(Duration.seconds(seconds));
+  delay.setOnFinished(e -> alert.close());
+  delay.play();
+ }
+
  private void showRegistrationSelection(Stage stage) {
   AnchorPane selectionPane = new AnchorPane();
   selectionPane.setPrefSize(400, 300);

@@ -4,7 +4,7 @@ module com.example.carpoolingapp {
     requires transitive javafx.controls;
 
     requires org.controlsfx.controls;
-    requires com.dlsc.formsfx;
+   // requires com.dlsc.formsfx;
     requires net.synedra.validatorfx;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
@@ -15,6 +15,7 @@ module com.example.carpoolingapp {
     requires com.google.gson;
     requires jdk.httpserver;
     requires java.net.http;
+    requires jakarta.mail;
     requires org.json;
     requires org.java_websocket;
     requires com.fasterxml.jackson.databind;
