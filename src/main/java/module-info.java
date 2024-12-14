@@ -16,6 +16,7 @@ module com.example.carpoolingapp {
     requires com.google.gson;
     requires jdk.httpserver;
     requires java.net.http;
+    requires jakarta.mail;
 
     exports com.example.carpoolingapp.microservices.auth.controller;
     exports com.example.carpoolingapp.microservices.auth.view;
