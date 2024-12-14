@@ -1,5 +1,8 @@
 package com.example.carpoolingapp.microservices.User.view;
 
+import com.example.carpoolingapp.microservices.User.controller.UserController;
+import com.example.carpoolingapp.model.Driver;
+import com.example.carpoolingapp.model.User;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -37,6 +40,17 @@ public class HomePage {
     }
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final Map<String, String[]> placeCoordinates = new HashMap<>();
+    private UserController userController = new UserController();
+    private User user;
+    private String fromLatitude;
+    private String fromLongitude;
+    private String toLatitude;
+    private String toLongitude;
+
+
+    public HomePage(User usr){
+        this.user = usr;
+    }
 
     public void show(Stage primaryStage) {
         // Root layout
@@ -58,8 +72,9 @@ public class HomePage {
         toSuggestionsList.setLayoutX(400);
 
         // Listeners for user input
-        fromField.textProperty().addListener((observable, oldValue, newValue) -> updateSuggestions(newValue, fromSuggestionsList));
-        toField.textProperty().addListener((observable, oldValue, newValue) -> updateSuggestions(newValue, toSuggestionsList));
+        fromField.textProperty().addListener((observable, oldValue, newValue) -> updateSuggestions(newValue, fromSuggestionsList, fromField, toField));
+        toField.textProperty().addListener((observable, oldValue, newValue) -> updateSuggestions(newValue, toSuggestionsList, fromField, toField));
+
 
         // Handle clicks on suggestions
         fromSuggestionsList.setOnMouseClicked(event -> handleSuggestionClick(fromSuggestionsList));
@@ -72,11 +87,11 @@ public class HomePage {
         webView.setPrefSize(750, 250);
 
         // Header Text
-        Text headerText = createText("Drivers Disponibles", "Aldhabi", 32, "#FFFFFF", 24, 380);
+        Text headerText = createText("Drivers Offres", "Aldhabi", 32, "#FFFFFF", 24, 380);
 
         // Offer Cards
-        AnchorPane offerCard1 = createOfferCard(24, 400, "User Name", "Distance to user", "file:src/main/resources/com/example/carpoolingapp/images/profile.png");
-        AnchorPane offerCard2 = createOfferCard(24, 500, "User Name", "Distance to user", "file:src/main/resources/com/example/carpoolingapp/images/profile.png");
+        AnchorPane offerCard1 = createOfferCard(24, 400, "User Name", "Distance to user", "file:src/main/resources/com/example/carpoolingapp/images/profile.png", this.user.getId(), 1);
+        AnchorPane offerCard2 = createOfferCard(24, 500, "User Name", "Distance to user", "file:src/main/resources/com/example/carpoolingapp/images/profile.png", this.user.getId(), 1);
 
         // Add components to root
         root.getChildren().addAll(sidebar, webView, headerText, offerCard1, offerCard2, fromField, toField, fromSuggestionsList, toSuggestionsList);
@@ -104,14 +119,14 @@ public class HomePage {
 
         // Profile Driver Image
         ImageView profiledriver = createImageView("file:src/main/resources/com/example/carpoolingapp/images/profile.png", 100, 80, 13, 64);
-        Text userName = new Text("User Name");
+        Text userName = new Text(this.user.getFirstName() + " " + this.user.getLastName());
         userName.setFont(Font.font("Arial Bold", 13));
         userName.setStyle("-fx-font-weight: bold;");
         userName.setFill(javafx.scene.paint.Color.WHITE);
         userName.setLayoutX(16);
         userName.setLayoutY(151);
 
-        Text userNameTag = new Text("@UserName");
+        Text userNameTag = new Text("@" + this.user.getUsername());
         userNameTag.setFont(Font.font("Times New Roman Italic", 10));
         userNameTag.setFill(javafx.scene.paint.Color.WHITE);
         userNameTag.setLayoutX(23);
@@ -190,7 +205,7 @@ public class HomePage {
         return suggestionsList;
     }
 
-    private AnchorPane createOfferCard(double layoutX, double layoutY, String userName, String distance, String profileImagePath) {
+    private AnchorPane createOfferCard(double layoutX, double layoutY, String userName, String distance, String profileImagePath, int userId, int driverId) {
         AnchorPane card = new AnchorPane();
         card.setLayoutX(layoutX);
         card.setLayoutY(layoutY);
@@ -205,6 +220,107 @@ public class HomePage {
         Button chooseButton = new Button("Choose");
         chooseButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;");
         chooseButton.setPrefSize(100, 30);
+
+        chooseButton.setOnAction(event -> {
+            try {
+                Driver driver = userController.getDriverDetails(driverId);
+                if (driver == null) {
+                    System.out.println("Driver not found.");
+                    return;
+                }
+
+                String[] driverLocation = userController.getDriverLocation(driverId);
+                if (driverLocation == null) {
+                    System.out.println("Driver location not found.");
+                    return;
+                }
+
+                // Use the instance variables for fromLatitude and fromLongitude
+                if (fromLatitude != null && fromLongitude != null) {
+                    System.out.println("Start Location: Lat: " + fromLatitude + ", Long: " + fromLongitude);
+                } else {
+                    System.out.println("Start location coordinates are not available.");
+                }
+
+                Stage popupStage = new Stage();
+                AnchorPane popupRoot = new AnchorPane();
+                popupRoot.setPrefSize(400, 300);
+                popupRoot.setStyle("-fx-background-color: #1D203E; -fx-padding: 20px;");
+
+                Text driverInfo = new Text("Driver: " + driver.getFirstName() + " " + driver.getLastName() +
+                        "\nVehicle: " + driver.getMarqueVehicule() + " " + driver.getModeleVehicule() +
+                        "\nYear: " + driver.getAnneeVehicule());
+                driverInfo.setFill(javafx.scene.paint.Color.WHITE);
+                driverInfo.setLayoutY(20);
+
+                Text driverLocationText = new Text("Driver Location: Lat: " + driverLocation[0] + ", Long: " + driverLocation[1]);
+                driverLocationText.setFill(javafx.scene.paint.Color.WHITE);
+                driverLocationText.setLayoutY(80);
+
+                Text fromLocationText = new Text("Start Location: Lat: " + fromLatitude + ", Long: " + fromLongitude);
+                fromLocationText.setFill(javafx.scene.paint.Color.WHITE);
+                fromLocationText.setLayoutY(120);
+
+                Text priceText = new Text("Price:");
+                priceText.setFill(javafx.scene.paint.Color.WHITE);
+                priceText.setLayoutY(160);
+                TextField priceField = new TextField("40dh");
+                priceField.setLayoutY(180);
+
+                Button confirmButton = new Button("Confirm");
+                confirmButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+                confirmButton.setLayoutY(220);
+                confirmButton.setOnAction(confirmEvent -> {
+                    try {
+                        String newPrice = priceField.getText();
+                        System.out.println("Driver confirmed with price: " + newPrice);
+
+                        // Close the current popup
+                        popupStage.close();
+
+                        // Open a new popup with WebView
+                        Stage webViewPopup = new Stage();
+                        AnchorPane webViewRoot = new AnchorPane();
+                        webViewRoot.setPrefSize(400, 300);
+                        webViewRoot.setStyle("-fx-background-color: #1D203E; -fx-padding: 20px;");
+
+                        // Create WebView
+                        WebView webView = new WebView();
+                        webView.setPrefSize(360, 200);
+                        webView.setLayoutX(20);
+                        webView.setLayoutY(60);
+
+                        // Create Text
+                        Text waitText = new Text("Wait here: Latitude " + fromLatitude + ", Longitude " + fromLongitude);
+                        waitText.setFill(javafx.scene.paint.Color.WHITE);
+                        waitText.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+                        waitText.setLayoutX(20);
+                        waitText.setLayoutY(40);
+
+                        // Add components to the root
+                        webViewRoot.getChildren().addAll(waitText, webView);
+
+                        // Set the scene and show the new popup
+                        webViewPopup.setScene(new Scene(webViewRoot));
+                        webViewPopup.setTitle("Driver Location");
+                        webViewPopup.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        System.out.println("Failed to open WebView popup.");
+                    }
+                });
+
+                popupRoot.getChildren().addAll(driverInfo, driverLocationText, fromLocationText, priceText, priceField, confirmButton);
+
+                popupStage.setScene(new Scene(popupRoot));
+                popupStage.setTitle("Driver Details");
+                popupStage.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Failed to fetch driver details or create popup.");
+            }
+        });
+
 
         // Position the button at the right center
         AnchorPane.setTopAnchor(chooseButton, 25.0);  // 25 pixels from the top of the card
@@ -234,7 +350,7 @@ public class HomePage {
         return textElement;
     }
 
-    private void updateSuggestions(String query, ListView<String> suggestionsList) {
+    private void updateSuggestions(String query, ListView<String> suggestionsList, TextField fromField, TextField toField) {
         if (query.isEmpty()) {
             suggestionsList.setVisible(false);
             return;
@@ -260,6 +376,15 @@ public class HomePage {
 
                 // Store coordinates
                 placeCoordinates.put(displayName, new String[]{latitude, longitude});
+
+                // Store the latitude and longitude in instance variables
+                if (query.equals(fromField.getText())) {
+                    fromLatitude = latitude;
+                    fromLongitude = longitude;
+                } else if (query.equals(toField.getText())) {
+                    toLatitude = latitude;
+                    toLongitude = longitude;
+                }
 
                 suggestions.add(displayName);
             }

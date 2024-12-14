@@ -17,9 +17,11 @@ module com.example.carpoolingapp {
     requires jdk.httpserver;
     requires java.net.http;
     requires jakarta.mail;
+    requires org.json;
 
     exports com.example.carpoolingapp.microservices.auth.controller;
     exports com.example.carpoolingapp.microservices.auth.view;
+    exports com.example.carpoolingapp.microservices.Drivers.view;
     exports com.example.carpoolingapp.microservices.User.view to javafx.graphics;
     exports com.example.carpoolingapp.microservices.Admin.View;
 
