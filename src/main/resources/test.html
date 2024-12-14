@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+
+<script>
+    let map;
+    document.addEventListener("DOMContentLoaded", function () {
+        map = L.map('map').setView([30.491395, -8.874367], 14);
+        const departCoords = [31.4167, -9.2833]; // Example coordinates for departure (Agadir, Morocco)
+        const arriveeCoords = [31.7917, -9.0926]; // Example coordinates for arrival (Marrakech, Morocco)
+        // Add map tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+        // Add markers for departure and arrival
+        L.marker(departCoords).addTo(map)
+            .bindPopup("Départ")
+            .openPopup();
+        L.marker(arriveeCoords).addTo(map)
+            .bindPopup("Arrivée")
+            .openPopup();
+        // Fetch and draw route
+        const url = `http://localhost:5000/route/v1/driving/${departCoords[1]},${departCoords[0]};${arriveeCoords[1]},${arriveeCoords[0]}?overview=full&geometries=geojson`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const route = data.routes[0];
+                const coordinates = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
+                L.polyline(coordinates, { color: 'blue' }).addTo(map);
+
+                // Optional: Add distance information
+                const distanceKm = (route.distance / 1000).toFixed(2);
+                L.popup()
+                    .setLatLng(coordinates[Math.floor(coordinates.length / 2)])
+                    .setContent(`Distance: ${distanceKm} km`)
+                    .addTo(map);
+            })
+            .catch(error => {
+                console.error("Erreur lors de la récupération de l'itinéraire :", error);
+            });
+    });
+</script>
+</body>
+</html>

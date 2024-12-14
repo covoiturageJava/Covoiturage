@@ -186,8 +186,6 @@ public class Login {
   } else {
     boolean loginSuccess = loginController.login(identifier, password, userType);
     if (loginSuccess) {
-     alert.setContentText("Login successful.");
-     alert.show();
      if ("User".equals(userType)) {
       User user = loginController.getUser(identifier);
       HomePage testPage = new HomePage(user);

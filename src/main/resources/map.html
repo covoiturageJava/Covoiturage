@@ -1,54 +1,164 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Carte Dynamique</title>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte avec Itinéraire</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         #map {
             width: 100%;
-            height: 100vh;
+            height: 85vh;
+        }
+        #controls {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px;
+            background: #f0f0f0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #infoPanel {
+            display: none;
+            padding: 10px;
+            background: #e8f4e8;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
 <div id="map"></div>
+<div id="controls">
+    <button id="set-start">Sélectionner Départ</button>
+    <button id="set-end">Sélectionner Arrivée</button>
+    <button id="confirm" onclick="confirmTrajet()">Confirmer Trajet</button>
+</div>
+<div id="infoPanel">
+    <p id="info-depart">Départ : Non sélectionné</p>
+    <p id="info-arrivee">Arrivée : Non sélectionné</p>
+    <p id="info-distance">Distance : Non calculée</p>
+</div>
 <script>
-    // Fonction pour extraire les paramètres de l'URL
-    function getQueryParams() {
-        const params = {};
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        urlParams.forEach((value, key) => {
-            params[key] = parseFloat(value); // Convertir en nombre si possible
+    let map;
+    let departMarker, arriveeMarker;
+    let departCoords, arriveeCoords;
+    let websocket;
+    function getUserId() {
+        return window.javaHandler ? window.javaHandler.getUserId() : null;
+    }
+    function getTrajetId() {
+        return window.javaHandler ? window.javaHandler.getTrajetId() : null;
+    }
+    function confirmTrajet() {
+        if (window.javaHandler && window.javaHandler.onConfirm) {
+            window.javaHandler.onConfirm();
+        }
+    }
+    function initWebSocket() {
+        websocket = new WebSocket("ws://localhost:8080/ws/trajet");
+        websocket.onopen = () => {
+            console.log("Connexion WebSocket ouverte");
+        };
+        websocket.onmessage = (event) => {
+            console.log("Message reçu depuis le serveur :", event.data);
+        };
+
+        websocket.onclose = () => {
+            console.log("Connexion WebSocket fermée");
+        };
+
+        websocket.onerror = (error) => {
+            console.error("Erreur WebSocket :", error);
+        };
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        initWebSocket();
+        map = L.map('map').setView([30.491395, -8.874367], 14);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+        document.getElementById("set-start").addEventListener("click", () => {
+            map.once('click', function (e) {
+                if (departMarker) map.removeLayer(departMarker);
+                departMarker = L.marker(e.latlng).addTo(map).bindPopup("Point de départ").openPopup();
+                departCoords = [e.latlng.lat, e.latlng.lng];
+                document.getElementById("info-depart").textContent = `Départ : ${departCoords}`;
+                if (window.javaHandler) {
+                    window.javaHandler.departSelected(e.latlng.lat, e.latlng.lng);
+                }
+            });
         });
-        return params;
-    }
 
-    // Extraire les coordonnées de l'URL
-    const params = getQueryParams();
-    const lat = params.lat || 51.505; // Latitude par défaut
-    const lng = params.lng || -0.09;  // Longitude par défaut
+        document.getElementById("set-end").addEventListener("click", () => {
+            map.once('click', function (e) {
+                if (arriveeMarker) map.removeLayer(arriveeMarker);
+                arriveeMarker = L.marker(e.latlng).addTo(map).bindPopup("Point d'arrivée").openPopup();
+                arriveeCoords = [e.latlng.lat, e.latlng.lng];
+                document.getElementById("info-arrivee").textContent = `Arrivée : ${arriveeCoords}`;
 
-    // Initialisation de la carte
-    var map = L.map('map').setView([lat, lng], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
+                // Appel à Java
+                if (window.javaHandler) {
+                    window.javaHandler.arriveeSelected(e.latlng.lat, e.latlng.lng);
+                }
+            });
+        });
 
-    var marker = L.marker([lat, lng]).addTo(map);
-    marker.bindPopup("Coordonnées : " + lat + ", " + lng).openPopup();
+        document.getElementById("confirm").addEventListener("click", () => {
+            if (!departCoords || !arriveeCoords) {
+                alert("Veuillez sélectionner les points de départ et d'arrivée.");
+                return;
+            }
+            document.getElementById("controls").style.display = "none";
+            document.getElementById("infoPanel").style.display = "block";
+            const url = `http://localhost:5000/route/v1/driving/${departCoords[1]},${departCoords[0]};${arriveeCoords[1]},${arriveeCoords[0]}?overview=full&geometries=geojson`;
+            // Récupérer les données de l'itinéraire depuis l'API
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const route = data.routes[0];
+                    const distanceKm = (route.distance / 1000).toFixed(2);
 
-    // Fonction pour mettre à jour la position
-    function updateMap(lat, lng) {
-        var newLatLng = new L.LatLng(lat, lng);
-        marker.setLatLng(newLatLng);
-        map.setView(newLatLng, 13);
-        marker.bindPopup("Coordonnées : " + lat + ", " + lng).openPopup();
-    }
+                    // Affichage des informations sur l'interface utilisateur
+                    document.getElementById("info-distance").textContent = `Distance : ${distanceKm} km`;
+
+                    // Récupération des IDs utilisateur et trajet
+                    const userId = getUserId();
+                    const trajetId = getTrajetId();
+
+                    // Préparer les informations du trajet
+                    const trajetInfo = {
+                        trajetId: trajetId,
+                        userId: userId,
+                        departLat: departCoords[0],
+                        departLng: departCoords[1],
+                        arriveeLat: arriveeCoords[0],
+                        arriveeLng: arriveeCoords[1],
+                        distance: distanceKm
+                    };
+
+                    if (websocket.readyState === WebSocket.OPEN) {
+                        websocket.send(JSON.stringify(trajetInfo));
+                        console.log("Données envoyées :", trajetInfo);
+                    } else {
+                        console.error("WebSocket non connecté");
+                    }
+                    // Tracer l'itinéraire sur la carte
+                    const coordinates = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
+                    L.polyline(coordinates, { color: 'blue' }).addTo(map);
+                })
+                .catch(error => {
+                    console.error("Erreur lors de la récupération de l'itinéraire :", error);
+                });
+        });
+    });
 </script>
 </body>
 </html>

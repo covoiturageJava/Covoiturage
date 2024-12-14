@@ -53,9 +53,9 @@ public class HomeDetailsOffresDrivers extends Application {
         webView.getEngine().load("file:src/main/resources/webview-content.html");
         acceptButton.setOnMouseClicked(mouseEvent -> {
             try{
-                PickUpDriver pick = new PickUpDriver();
-                Stage currentStage = (Stage)((Button)mouseEvent.getSource()).getScene().getWindow();
-                pick.start(currentStage);
+                //PickUpDriver pick = new PickUpDriver();
+                //Stage currentStage = (Stage)((Button)mouseEvent.getSource()).getScene().getWindow();
+                //pick.start(currentStage);
             }catch(Exception e){
                 e.printStackTrace();
             }
