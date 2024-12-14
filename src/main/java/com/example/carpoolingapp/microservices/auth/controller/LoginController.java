@@ -36,7 +36,6 @@ public class LoginController {
         String sql = "SELECT * FROM Users WHERE (email = ? OR username = ?) AND password = ?";
         return authenticate(connection, sql, emailOrUsername, password);
     }
-
     public SessionDriver loginDriver(String emailOrUsername, String password) throws SQLException {
         Connection connection = DatabaseInitializer.getConnection();
         DatabaseInitializer.selectDatabase(connection);
@@ -49,7 +48,6 @@ public class LoginController {
             if (rs.next()) {
                 int state = rs.getInt("state");
                 int driverId = rs.getInt("id");
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
                 switch (state) {
                     case 1:

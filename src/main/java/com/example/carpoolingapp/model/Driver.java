@@ -16,11 +16,13 @@ public class Driver extends User {
     private String imageInterieurAvant;
     private String imageInterieurArriere;
     private String imageMatricule;
+
+
     public Driver(int etat, String typeVehicule, String marqueVehicule, String modeleVehicule,
-                   String anneeVehicule, String cinInfo, String assuranceInfo, String permitInfo,
-                   String griseInfo, String dateInscription, String imageExterieurAvant,
-                   String imageExterieurArriere, String imageInterieurAvant,
-                   String imageInterieurArriere, String imageMatricule) {
+                  String anneeVehicule, String cinInfo, String assuranceInfo, String permitInfo,
+                  String griseInfo, String dateInscription, String imageExterieurAvant,
+                  String imageExterieurArriere, String imageInterieurAvant,
+                  String imageInterieurArriere, String imageMatricule) {
         this.etat = etat;
         this.typeVehicule = typeVehicule;
         this.marqueVehicule = marqueVehicule;

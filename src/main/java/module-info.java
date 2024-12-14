@@ -4,7 +4,7 @@ module com.example.carpoolingapp {
     requires transitive javafx.controls;
 
     requires org.controlsfx.controls;
-    requires com.dlsc.formsfx;
+   // requires com.dlsc.formsfx;
     requires net.synedra.validatorfx;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
@@ -19,6 +19,7 @@ module com.example.carpoolingapp {
     exports com.example.carpoolingapp.microservices.auth.controller;
     exports com.example.carpoolingapp.microservices.auth.view;
     exports com.example.carpoolingapp.microservices.Drivers.view;
+    exports com.example.carpoolingapp.microservices;
 
 
     opens com.example.carpoolingapp to javafx.fxml;

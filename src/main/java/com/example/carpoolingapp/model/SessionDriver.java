@@ -1,9 +1,17 @@
 package com.example.carpoolingapp.model;
 
-public class SessionDriver {
+import java.io.Serializable;
+
+public class SessionDriver implements Serializable  {
     private int driver_id;
     private double latitude;
     private double longitude;
+    public SessionDriver() {}
+    public SessionDriver(int driver_id, double latitude, double longitude) {
+        this.driver_id = driver_id;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
     // Getters and Setters
     public int getDriver_id() {
