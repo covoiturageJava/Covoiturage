@@ -111,7 +111,7 @@ public class driverController {
                 driver.setGriseInfo(carteGriseRecto + ";" + carteGriseVerso);
                 driver.setPermitInfo(permisRecto + ";" + permisVerso);
                 driver.setAssuranceInfo(assurance);
-                driver.setEtat(3);
+                driver.setEtat(1);
                 submitDriverToDatabase(driver);
             } catch (Exception e) {
                 errors.add("Erreur lors de la sauvegarde des données : " + e.getMessage());
